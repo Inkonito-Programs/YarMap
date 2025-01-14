@@ -51,7 +51,7 @@
     </nav>
 
     <!--Левое меню [pc]-->
-    <div class="left_menu">
+    <div id="left_menu" class="left_menu">
       <!--Блок с логотипом-->
       <div class="div_with_logo">
         <img src="files/logo.png" alt="">
@@ -82,7 +82,7 @@
       <div class="upper_curb_on_the_map">
         <div class="block_with_content_text_on_the_map">
           <div class="the_content_text_on_the_map">
-            <p align="center">ДРЕВНИЙ ЯРОСЛАВЛЬ</p>
+            <p align="center">г. ЯРОСЛАВЛЬ</p>
             <hr>
             <p align="center" class="text2">ВТОРОЙ ПОЛОВИНЫ XVIII ВЕКА</p>
           </div>
@@ -110,306 +110,198 @@
     </div>
 
     <script>
-        // Получаем текущую дату
-        const currentDate = new Date();
+        // Конфигурация карты
+        const MAP_BOUNDS = [[0, 0], [1000, 1000]]; // Границы карты в координатах (x, y)
+        const MAP_CENTER = [500, 500]; // Центр карты в координатах (x, y)
+        const MAP_ZOOM = -1; // Начальный уровень масштабирования карты
 
-        // Получаем месяц (0 - январь, 1 - февраль, ..., 11 - декабрь)
-        const currentMonth = currentDate.getMonth();
-
-        // Проверяем, если текущий месяц - декабрь (11), январь (0) или февраль (1)
-        if (currentMonth === 11 || currentMonth === 0 || currentMonth === 1) {
-          // Запускаем снег
-          new Snow ();
-        }
-
-        // Запускаем уведомление при нажатии на кнопку 'о сайте'
-        document.getElementById("notify-button").addEventListener("click", function() {
-            alert("Связь с разработчиком: ip-feedback@mail.ru \nТелефон музея: Тел: 8 (4852) 30-41-75");
+        // Инициализация карты с использованием библиотеки Leaflet
+        const map = L.map('map', {
+            crs: L.CRS.Simple, // Используем простую систему координат (без привязки к реальным географическим координатам)
+            minZoom: -1, // Минимальный уровень масштабирования
+            maxZoom: 4 // Максимальный уровень масштабирования
         });
 
-        //Данная функция получает элементы по их id: modelHram, win1 и изменяет источник модели на указанный.
-        //Делает видимым модальное окно win1 с контентом по меткам на карте и отображает (true) или запрещает отображение (false) iframo-pedia.
-        function showModel(modelSrc, showIframopedia = false) {
-            let modelHram = document.getElementById("modelHram");
-            let win1 = document.getElementById("win1");
+        // Установка границ и изображения карты
+        const bounds = MAP_BOUNDS.map(([x, y]) => L.latLng(y, x)); // Преобразуем координаты границ в формат, понятный Leaflet
+        L.imageOverlay('files/maps/old_Yaroslavl.webp', bounds).addTo(map); // Накладываем изображение карты на карту
+        map.setMaxBounds(L.latLngBounds(bounds)); // Устанавливаем границы карты
+        map.setView(L.latLng(...MAP_CENTER), MAP_ZOOM); // Устанавливаем центр карты и уровень масштабирования
 
-            modelHram.src = modelSrc;
-            win1.style.display = "flex";
+        // Иконки для маркеров
+        const icons = {
+            regular: L.icon({ iconUrl: 'files/other/3d-cube.png', iconSize: [18, 18], iconAnchor: [13, 13] }), // Иконка для обычных маркеров
+            regularBacklight: L.icon({ iconUrl: 'files/other/3d-cube_backlight.png', iconSize: [18, 18], iconAnchor: [13, 13] }), // Подсвеченная иконка для обычных маркеров
+            significant: L.icon({ iconUrl: 'files/other/360-view.png', iconSize: [18, 18], iconAnchor: [13, 13] }), // Иконка для маркеров с 360-градусным обзором
+            significantBacklight: L.icon({ iconUrl: 'files/other/360-view_backlight.png', iconSize: [18, 18], iconAnchor: [13, 13] }) // Подсвеченная иконка для маркеров с 360-градусным обзором
+        };
 
-            document.getElementById('iframo-pedia').style.display = showIframopedia ? 'block' : 'none';
-        }
+        // Координаты маркеров (Тут нет маркера для стрелки!!! Добавить!!!)
+        const markerLocations = {
+            number1: [95.5, 932.5],
+            number2: [110.0, 872.0],
+            number3: [165.0, 940.0],
+            number5: [130.0, 928.0],
+            number7: [128.0, 942.5],
+            number13: [360.0, 868.0],
+            number68: [130.0, 685.0],
+            number70: [554.0, 735.5],
+            number71: [597.0, 843.0],
+            number83: [158.0, 593.0],
+            number84: [430.5, 141.0],
+            strelka: [45.0, 960.0]
+        };
 
-        //Данные функции при вызове вызывают функцию showModel() и передают в нее источник нужной нам 3D модели и параметр showIframopedia принимающий значение true или false
-        function showmodelNone() {
-            showModel("files/3D_files/none.glb", true);
+        function model1(){
+          showModel("files/3D_files/Cathedral_of_the_Assumption_Cathedral.glb");
         }
-        function showmodel0(){
-          showModel("files/3D_files/cerkov_ioanna_zlatausta.glb");
+        function model2(){
+          showModel("files/3D_files/Church_of_St._Nicholas_the_Chopped.glb");
         }
-        function showmodel1(){
-          showModel("files/3D_files/cerkov_nikolaya_chudotvorca.glb");
+        function model3(){
+          showModel("files/3D_files/Ilyinsko-Tikhonovskaya_Church.glb");
         }
-        function showmodel2(){
-          showModel("files/3D_files/cerkov_na_bozhedomke.glb");
+        function model5(){
+          showModel("files/3D_files/St._John_Chrysostom_Church.glb");
         }
-        function showmodel3(){
-          showModel("files/3D_files/uspenskiy_sobor.glb");
+        function model7(){
+          showModel("files/3D_files/Bishop's House_(formerly metropolitan chambers).glb");
         }
-        function showmodel4(){
-          showModel("files/3D_files/ilyinsko_tihonovskaya_cerkov.glb");
+        function model13(){
+          showModel("files/3D_files/Church_of_St._Nicholas_Nadein.glb");
         }
-        function showmodel5(){
-          showModel("files/3D_files/mitropolichyi_palati.glb");
+        function model68(){
+          showModel("files/3D_files/Church_of_the_Epiphany_of_the_Lord.glb");
         }
-        function showmodel6(){
-          showModel("files/3D_files/cerkov_simeona_stolpnica.glb");
+        function model70(){
+          showModel("files/3D_files/Simeon_Stylites_Church.glb");
         }
-        function showmodel7(){
-          showModel("files/3D_files/cerkov_nicoli_nadeina.glb");
-        }
-        function showmodel8(){
-          showModel("files/3D_files/cerkov_dmitrya_solunskogo.glb");
-        }
-        function showmodel9(){
+        function model71(){
           showModel("files/3D_files/Annunciation_Church.glb");
         }
-
-
-
-        // Создаем карту и привязываем ее к элементу на сайте с id map (в нашем случае <div>)
-        const map = L.map('map', {
-          crs: L.CRS.Simple,
-          minZoom: -1,
-          maxZoom: 4
-        });
-
-        // Обработка координат карты
-        const yx = L.latLng;
-
-        function xy(x, y) {
-          if (Array.isArray(x)) {
-            return yx(x[1], x[0]);
-          }
-          return yx(y, x);
+        function model83(){
+          showModel("files/3D_files/The_Church_of_Dmitry_Solunsky.glb");
+        }
+        function model84(){
+          showModel("files/3D_files/St._Vladimir's_Church_(on Bozhedomka).glb");
         }
 
-        // Здесь создается массив, который определяет границы (или пределы) для наложенного изображения на карту.
-        // Эти вызовы функции xy создают координаты для верхнего левого (0, 0) и нижнего правого (1000, 1000) углов карты.
-        // Так как мы работаем с простой системой координат, эти координаты будут использоваться для привязки изображения к карте.
-        const bounds = [xy(0, 0), xy(1000, 1000)];
+        // Данные маркеров
+        const markersData = [
+            { location: markerLocations.number1, icon: icons.significant, title: "Кафедральный Успенский собор", modelAction3D: "model1()" },
+            { location: markerLocations.number2, icon: icons.regular, title: "Церковь Николы Рубленого", modelAction3D: "model2()", infoAction: "showInfo('The Church of St. Nicholas the Chopped.html')" },
+            { location: markerLocations.number3, icon: icons.regular, title: "Ильинско-Тихоновская церковь", modelAction3D: "model3()", infoAction: "showInfo('Ilyinsko - Tikhonovskaya Church.html')" },
+            { location: markerLocations.number5, icon: icons.regular, title: "Церковь Иоанна Златауста", modelAction3D: "model5()" },
+            { location: markerLocations.number7, icon: icons.regular, title: "Архиерейский дом (бывш. метрополичьи палаты)", modelAction3D: "model7()" },
+            { location: markerLocations.number13, icon: icons.regular, title: "Церковь Николы Надеина", modelAction3D: "model13()" },
+            { location: markerLocations.number68, icon: icons.significant, title: "Церковь Богоявления Господня", modelAction3D: "model68()", modelAction360: "window.location.href = 'str/panarams/panorama_yar10.html';", infoAction: "showInfo('Church of the Epiphany.html')" },
+            { location: markerLocations.number70, icon: icons.regular, title: "Церковь Симеона Столпника", modelAction3D: "model70()", infoAction: "showInfo('cerkov_simeona_stolpnica.html')" },
+            { location: markerLocations.number71, icon: icons.regular, title: "Благовещенская церковь", modelAction3D: "model71()" },
+            { location: markerLocations.number83, icon: icons.regular, title: "Церковь Дмитрия Солунского", modelAction3D: "model83()" },
+            { location: markerLocations.number84, icon: icons.regular, title: "Владимерская церковь (на Божедомке)", modelAction3D: "model2()", infoAction: "showInfo('Church on bozhedomka.html')" },
+            { location: markerLocations.strelka, icon: icons.significant, title: "Стрелка", modelAction360: "window.location.href = 'str/panarams/panorama_strelka.html';"}
+        ];
 
-        // Наложение изображения
-        const image = L.imageOverlay('files/maps/old_Yaroslavl.webp', bounds).addTo(map);
+        // Функция для отображения 3D модели
+        function showModel(modelSrc, showIframopedia = false) {
+            document.getElementById('modelHram').src = modelSrc; // Устанавливаем источник для 3D модели
+            document.getElementById('win1').style.display = 'flex'; // Показываем окно с 3D моделью
+            document.getElementById('iframo-pedia').style.display = showIframopedia ? 'block' : 'none'; // Показываем или скрываем iframe с дополнительной информацией
+        }
 
-        // Определение углов карты
-        // Здесь снова создаются координаты для углов карты, используя функцию xy.
-        // Угол верхнего левого соответствует координатам (0, 0), а нижнего правого — (1000, 1000).
-        // Эти координаты будут использоваться для определения видимых границ карты.
-        const topLeft = xy(0, 0);
-        const bottomRight = xy(1000, 1000);
+        // Функция для отображения информации
+        function showInfo(page) {
+            showModel("files/3D_files/none.glb", true); // Показываем пустую 3D модель и iframe
+            document.querySelector('#iframo-pedia').src = `str/iframo-pedia/${page}?timestamp=${Date.now()}`; // Загружаем информацию в iframe
+        }
 
-        // Максимальные границы карты
-        const boundsLatLng = L.latLngBounds(topLeft, bottomRight);
-        map.setMaxBounds(boundsLatLng);
-
-        //
-        map.setView(xy(500, 500), -1); // Set initial view center and zoom level
-
-        const customIcon = L.icon({
-          iconUrl: 'files/other/3d-cube.png',
-          iconSize: [30, 45],
-          iconAnchor: [15, 25],
-        });
-
-        const customIcon_backlight = L.icon({
-          iconUrl: 'files/other/3d-cube_backlight.png',
-          iconSize: [30, 45],
-          iconAnchor: [15, 25],
-        });
-
-        const tours_360 = L.icon({
-          iconUrl: 'files/other/360-view.png',
-          iconSize: [45, 45],
-          iconAnchor: [25, 25],
-        });
-
-        const tours_360_backlight = L.icon({
-          iconUrl: 'files/other/360-view_backlight.png',
-          iconSize: [45, 45],
-          iconAnchor: [25, 25],
-        });
-
-
-        const hram1 = xy(685.0, 130.0);//Маркер используется <<Церковь Богоявления Господня 360>>
-        const hram2 = xy(872.0, 110.0);//Маркер используется <<Церковь Николая Чудотворца 3D>>
-        const hram3 = xy(928.0, 130.0);//Маркер используется <<Церковь Иоанна Златауста 3D>>
-        const hram4 = xy(955.0, 46.5);//Маркер используется <<Стрелка 3D>>
-        const hram5 = xy(141.0, 430.5);//Маркер используется <<Храм на Божедомке>>
-        const hram6 = xy(932.5, 95.5);//Маркер используется <<Кафедральный Успенский собор>>
-        const hram7 = xy(940.0, 165.0);//Маркер используется <<Ильинско-Тихоновская церковь>>
-        const hram8 = xy(735.5, 554.0);//Маркер используется <<Церковь Симеона Столпника>>
-        const hram9 = xy(868.0, 360.0);//Маркер используется <<Церковь Николы Надеина>>
-        const hram10 = xy(593.0, 158.0);//Маркер используется <<Церковь Дмитрия Солунского>>
-        const hram11 = xy(843.0, 597.0);//Маркер используется <<Благовещенская церковь>>
-        const building1 = xy(942.5, 128.0);//Маркер используется <<Архиерейский дом (бывш. метрополичьи палаты)>>
-
-
-        function createMarker(object, icon, name, infoButtonAction, modelButtonAction, additionalInfo = '') {
-            const buttonLabel = icon === tours_360 ? '360' : '3D'; // Проверка значения icon
-            const popupContent =
-                `${name} <br><br>
+        // Функция для создания маркера
+        function createMarker({ location, icon, title, modelAction360, modelAction3D, infoAction }) {
+            const popupContent = `
+                ${title} <br><br>
                 <p style="text-align: center;">
-                    <button onclick="${modelButtonAction}">${buttonLabel}</button>
-                    ${infoButtonAction ? `<button onclick="${infoButtonAction}">Информация</button>` : ''}
-                </p>`;
+                    ${modelAction360 ? `<button onclick="${modelAction360}">360</button>` : ''}
+                    ${modelAction3D ? `<button onclick="${modelAction3D}">3D</button>` : ''}
+                    ${infoAction ? `<button onclick="${infoAction}">Информация</button>` : ''}
+                </p>`; // Создаем содержимое всплывающего окна маркера
 
-            L.marker(object, { icon }).addTo(map)
-                .bindPopup(popupContent)
-                .on('click', function() {
-                    document.getElementById("myHeading").innerHTML = name;
-                });
+            const marker = L.marker(L.latLng(...location), { icon }).bindPopup(popupContent); // Создаем маркер с иконкой и всплывающим окном
+            marker.on('popupopen', () => {
+                document.getElementById('myHeading').textContent = title; // Обновляем заголовок при открытии всплывающего окна
+                marker.setIcon(icon === icons.regular ? icons.regularBacklight : icons.significantBacklight); // Подсвечиваем иконку маркера
+            });
+            marker.on('popupclose', () => marker.setIcon(icon)); // Возвращаем обычную иконку при закрытии всплывающего окна
+            return marker;
         }
 
+        // Создание и добавление маркеров на карту
+        const markers = markersData.map(markerData => createMarker(markerData)); // Создаем маркеры на основе данных
+        markers.forEach(marker => marker.addTo(map)); // Добавляем маркеры на карту
 
-        //(№1) модель
-        createMarker(hram6, customIcon, "Кафедральный Успенский собор", null, "showmodel3()");
-        //(№2) модель + информация
-        createMarker(hram2, customIcon, "Церковь Николы Рубленого", "showmodelNone(); document.querySelector('#iframo-pedia').src = 'str/iframo-pedia/The Church of St. Nicholas the Chopped.html?timestamp=<%= DateTime.Now.Ticks %>'; return false;", "showmodel1()");
-        //(№4) модель + информация
-        createMarker(hram7, customIcon, "Ильинско-Тихоновская церковь", "showmodelNone(); document.querySelector('#iframo-pedia').src = 'str/iframo-pedia/Ilyinsko - Tikhonovskaya Church.html?timestamp=<%= DateTime.Now.Ticks %>'; return false;", "showmodel4()");
-        //(№5) модель
-        createMarker(hram3, customIcon, "Церковь Иоанна Златауста", null, "showmodel0()");
-        //(№7) модель
-        createMarker(building1, customIcon, "Архиерейский дом (бывш. метрополичьи палаты)", null, "showmodel5()");
-        //(№13) модель
-        createMarker(hram9, customIcon, "Церковь Николы Надеина", null, "showmodel7()");
-        //(№68) панарама + информация
-        createMarker(hram1, tours_360, "Церковь Богоявления Господня", "showmodelNone(); document.querySelector('#iframo-pedia').src = 'str/iframo-pedia/Church of the Epiphany.html?timestamp=<%= DateTime.Now.Ticks %>'; return false;", "window.location.href = 'str/panarams/panorama_yar10.html';");
-        //(№70) модель + информация
-        createMarker(hram8, customIcon, "Церковь Симеона Столпника", "showmodelNone(); document.querySelector('#iframo-pedia').src = 'str/iframo-pedia/cerkov_simeona_stolpnica.html?timestamp=<%= DateTime.Now.Ticks %>'; return false;", "showmodel6()");
-        //(№71) модель
-        createMarker(hram11, customIcon, "Благовещенская церковь", null, "showmodel9()");
-        //(№83) модель
-        createMarker(hram10, customIcon, "Церковь Дмитрия Солунского", null, "showmodel8()");
-        //(№84) модель + информация
-        createMarker(hram5, customIcon, "Церковь на Божедомке", "showmodelNone(); document.querySelector('#iframo-pedia').src = 'str/iframo-pedia/Church on bozhedomka.html?timestamp=<%= DateTime.Now.Ticks %>'; return false", "showmodel2()");
-        //(№none) панарама + информация
-        createMarker(hram4, tours_360, "Стрелка", "showmodelNone(); document.querySelector('#iframo-pedia').src = 'str/iframo-pedia/Strelka.html?timestamp=<%= DateTime.Now.Ticks %>'; return false;", "window.location.href = 'str/panarams/panorama_strelka.html';");
+        // Обработчик кликов по ссылкам в iframe
+        function handleIframeLinkClick(event) {
+            const clickedTitle = event.target.textContent.trim().replace(/^\d+\.\s*/, ''); // Получаем текст ссылки, по которой кликнули
+            const correspondingMarkerData = markersData.find(marker => marker.title === clickedTitle); // Ищем соответствующий маркер
 
-          const closeBtn = document.querySelector('.close');
-        const modal = document.getElementById('win1');
+            if (correspondingMarkerData) {
+                const correspondingMarker = markers.find(marker => {
+                    const markerLatLng = marker.getLatLng();
+                    return markerLatLng.lat === correspondingMarkerData.location[0] &&
+                           markerLatLng.lng === correspondingMarkerData.location[1];
+                }); // Находим маркер на карте
 
-        closeBtn.addEventListener('click', () => {
-          modal.style.display = 'none';
-        });
-
-
-    var iframe = document.getElementById('myFrame');
-
-    iframe.onload = function() {
-      var iframeContent = iframe.contentDocument || iframe.contentWindow.document;
-      var markers = [];
-      var paragraphs = iframeContent.getElementsByTagName('a');
-
-      var places = [
-        {
-          text: '1. Кафедральный Успенский собор',
-          location: hram6,
-          title: 'Кафедральный Успенский собор',
-          buttons: `<button onclick="showmodel3()">3D</button>`
-        },
-        {
-          text: '2. Церковь Николы Рубленого',
-          location: hram2,
-          title: 'Церковь Николы Рубленого',
-          buttons: `<button onclick="showmodel1()">3D</button>
-                    <button onclick="showmodelNone(); document.querySelector('#iframo-pedia').src = 'str/iframo-pedia/The Church of St. Nicholas the Chopped.html?timestamp=<%= DateTime.Now.Ticks %>'; return false;">Информация</button>`
-        },
-        {
-          text: '4. Ильинско-Тихоновская церковь',
-          location: hram7,
-          title: 'Ильинско-Тихоновская церковь',
-          buttons: `<button onclick="showmodel4()">3D</button>
-                    <button onclick="showmodelNone(); document.querySelector('#iframo-pedia').src = 'str/iframo-pedia/Ilyinsko - Tikhonovskaya Church.html?timestamp=<%= DateTime.Now.Ticks %>'; return false;">Информация</button>`
-        },
-        {
-          text: '5. Церковь Иоанна Златауста',
-          location: hram3,
-          title: 'Церковь Иоанна Златауста',
-          buttons: `<button onclick="showmodel0()">3D</button>`
-        },
-        {
-          text: '7. Архиерейский  дом (бывш. метрополичьи палаты)',
-          location: building1,
-          title: 'Архиерейский  дом (бывш. метрополичьи палаты)',
-          buttons: `<button onclick="showmodel5()">3D</button>`
-        },
-        {
-          text: '13. Церковь Николы Надеина',
-          location: hram9,
-          title: 'Церковь Николы Надеина',
-          buttons: `<button onclick="showmodel7()">3D</button>`
-        },
-        {
-          text: '68. Церковь Богоявления Господня',
-          location: hram1,
-          title: 'Церковь Богоявления Господня',
-          buttons: `<button onclick="window.location.href = 'str/panarams/panorama_yar10.html';">360°</button>
-                    <button onclick="showmodelNone(); document.querySelector('#iframo-pedia').src = 'str/iframo-pedia/Church of the Epiphany.html?timestamp=<%= DateTime.Now.Ticks %>'; return false;">Информация</button>`
-        },
-        {
-          text: '70. Церковь Симеона Столпника',
-          location: hram8,
-          title: 'Церковь Симеона Столпника',
-          buttons: `<button onclick="showmodel6()">3D</button>
-                    <button onclick="showmodelNone(); document.querySelector('#iframo-pedia').src = 'str/iframo-pedia/cerkov_simeona_stolpnica.html?timestamp=<%= DateTime.Now.Ticks %>'; return false;">Информация</button>`
-        },
-        {
-          text: '71. Благовещенская церковь',
-          location: hram11,
-          title: 'Благовещенская церковь',
-          buttons: `<button onclick="showmodel9()">3D</button>`
-        },
-        {
-          text: '83. Дмитрия Солунского',
-          location: hram10,
-          title: 'Дмитрия Солунского',
-          buttons: `<button onclick="showmodel8()">3D</button>`
-        },
-        {
-          text: '84. Владимерская церковь (на Божедомке)',
-          location: hram5,
-          title: 'Владимерская церковь (на Божедомке)',
-          buttons: `<button onclick="showmodel2()">3D</button>
-                    <button onclick="showmodelNone(); document.querySelector('#iframo-pedia').src = 'str/iframo-pedia/Church on bozhedomka.html?timestamp=<%= DateTime.Now.Ticks %>'; return false;">Информация</button>`
+                if (correspondingMarker) {
+                    correspondingMarker.openPopup(); // Открываем всплывающее окно маркера
+                    correspondingMarker.setIcon(correspondingMarkerData.icon === icons.custom ? icons.customBacklight : icons.tours360Backlight); // Подсвечиваем иконку маркера
+                    resetMarkers(correspondingMarker); // Сбрасываем иконки остальных маркеров
+                }
+            }
         }
-      ];
 
+        // Инициализация обработчика iframe
+        document.getElementById('myFrame').onload = function() {
+            const iframeDocument = this.contentDocument || this.contentWindow.document;
+            const links = iframeDocument.getElementsByTagName('a'); // Получаем все ссылки в iframe
 
-      var resetMarkers = function() {
-        markers.forEach(marker => marker.setIcon(customIcon));
-      };
+            Array.from(links).forEach(link => {
+                link.addEventListener('click', handleIframeLinkClick); // Добавляем обработчик клика на каждую ссылку
+            });
+        };
 
-      Array.from(paragraphs).forEach(paragraph => {
-        paragraph.addEventListener('click', function(event) {
-          resetMarkers();
-          var selectedText = event.target.textContent.trim();
-          var place = places.find(p => p.text === selectedText);
+        // Функция для сброса иконок маркеров
+        function resetMarkers(exceptMarker) {
+            markers.forEach(marker => {
+                if (marker !== exceptMarker) {
+                    const markerData = markersData.find(data => {
+                        const markerLatLng = marker.getLatLng();
+                        return markerLatLng.lat === data.location[0] &&
+                               markerLatLng.lng === data.location[1];
+                    });
+                    if (markerData) marker.setIcon(markerData.icon); // Возвращаем обычную иконку маркера
+                }
+            });
+        }
 
-          if (place) {
-            var selectedMarker = L.marker(place.location, { icon: customIcon_backlight })
-              .addTo(map)
-              .bindPopup(`${place.title}<br><br><p style="text-align: center;">${place.buttons}</p>`)
-              .on('click', function() {
-                document.getElementById("myHeading").innerHTML = place.title;
-              })
-              .openPopup();
-
-            markers.push(selectedMarker);
-          }
+        // Обработчики событий
+        document.getElementById('notify-button').addEventListener('click', () => {
+            alert("Связь с разработчиком: ip-feedback@mail.ru \nТелефон музея: Тел: 8 (4852) 30-41-75"); // Показываем контактную информацию
         });
-      });
-    };
+
+        document.getElementById('left_menu').addEventListener('click', () => {
+            markers.forEach(marker => marker.closePopup()); // Закрываем все всплывающие окна маркеров
+        });
+
+        document.querySelector('.close').addEventListener('click', () => {
+            document.getElementById('win1').style.display = 'none'; // Скрываем окно с 3D моделью
+        });
+
+        // Проверка месяца для запуска снега
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth(); // Получаем текущий месяц
+
+        if ([11, 0, 1].includes(currentMonth)) { // Если текущий месяц - декабрь, январь или февраль
+            new Snow(); // Запускаем эффект снега
+        }
     </script>
   </body>
 </html>
