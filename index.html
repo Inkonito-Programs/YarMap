@@ -192,19 +192,37 @@
         }
 
         // Данные маркеров
+        // :param location: Переменная - номер объекта на карте (содержит координаты объекта)
+        // :param icon:
+        // :param title: Название объекта
+        // :param modelAction3D: Функция для показа 3D модели
+        // :param infoAction: Функция для показа информации по объекту, с вложенным в нее параметром - названием папки с контентом по объекту
+        // :param imagesAction: Функция для показа галереи по объекту, с вложенным в нее параметром - названием папки с контентом по объекту
         const markersData = [
-            { location: markerLocations.number1, icon: icons.significant, title: "Кафедральный Успенский собор", modelAction3D: "model1()" },
-            { location: markerLocations.number2, icon: icons.regular, title: "Церковь Николы Рубленого", modelAction3D: "model2()", infoAction: "showInfo('The Church of St. Nicholas the Chopped.html')" },
-            { location: markerLocations.number3, icon: icons.regular, title: "Ильинско-Тихоновская церковь", modelAction3D: "model3()", infoAction: "showInfo('Ilyinsko - Tikhonovskaya Church.html')" },
+            { location: markerLocations.number1,
+              icon: icons.significant,
+              title: "Кафедральный Успенский собор",
+              modelAction3D: "model1()",
+              infoAction: "showInfo('Cathedral of the Assumption Cathedral')",
+              imagesAction: "showImages('Cathedral of the Assumption Cathedral')"},
+
+            { location: markerLocations.number2,
+              icon: icons.regular,
+              title: "Церковь Николы Рубленого",
+              modelAction3D: "model2()",
+              infoAction: "showInfo('The Church of St. Nicholas the Chopped')",
+              imagesAction: "showImages('The Church of St. Nicholas the Chopped')"},
+
+            { location: markerLocations.number3, icon: icons.regular, title: "Ильинско-Тихоновская церковь", modelAction3D: "model3()", infoAction: "showInfo('Ilyinsko - Tikhonovskaya Church')" },
             { location: markerLocations.number5, icon: icons.regular, title: "Церковь Иоанна Златауста", modelAction3D: "model5()" },
             { location: markerLocations.number7, icon: icons.regular, title: "Архиерейский дом (бывш. митрополичьи палаты)", modelAction3D: "model7()" },
             { location: markerLocations.number13, icon: icons.regular, title: "Церковь Николы Надеина", modelAction3D: "model13()" },
-            { location: markerLocations.number23, icon: icons.regular, title: "Церковь Архангела Михаила", modelAction3D: "model23()", tourAction: "window.location.href = 'str/tours/ArkhangelMikhael/index.html';", videoAction: "window.open('https://vkvideo.ru/video-83055312_456239040', '_blank');", infoAction: "showInfo('Church_of_the_Archangel_Michael.html')"},
-            { location: markerLocations.number68, icon: icons.significant, title: "Церковь Богоявления Господня", modelAction3D: "model68()", modelAction360: "window.location.href = 'str/panarams/panorama_yar10.html';", infoAction: "showInfo('Church of the Epiphany.html')" },
-            { location: markerLocations.number70, icon: icons.regular, title: "Церковь Симеона Столпника", modelAction3D: "model70()", infoAction: "showInfo('cerkov_simeona_stolpnica.html')" },
+            { location: markerLocations.number23, icon: icons.regular, title: "Церковь Архангела Михаила", modelAction3D: "model23()", tourAction: "window.location.href = 'str/tours/ArkhangelMikhael/index.html';", videoAction: "window.open('https://vkvideo.ru/video-83055312_456239040', '_blank');", infoAction: "showInfo('Church_of_the_Archangel_Michael')"},
+            { location: markerLocations.number68, icon: icons.significant, title: "Церковь Богоявления Господня", modelAction3D: "model68()", modelAction360: "window.location.href = 'str/panarams/panorama_yar10.html';", infoAction: "showInfo('Church of the Epiphany')" },
+            { location: markerLocations.number70, icon: icons.regular, title: "Церковь Симеона Столпника", modelAction3D: "model70()", infoAction: "showInfo('cerkov_simeona_stolpnica')" },
             { location: markerLocations.number71, icon: icons.regular, title: "Благовещенская церковь", modelAction3D: "model71()" },
             { location: markerLocations.number83, icon: icons.regular, title: "Церковь Дмитрия Солунского", modelAction3D: "model83()" },
-            { location: markerLocations.number84, icon: icons.regular, title: "Владимерская церковь (на Божедомке)", modelAction3D: "model2()", infoAction: "showInfo('Church on bozhedomka.html')" },
+            { location: markerLocations.number84, icon: icons.regular, title: "Владимерская церковь (на Божедомке)", modelAction3D: "model2()", infoAction: "showInfo('Church on bozhedomka')" },
             { location: markerLocations.strelka, icon: icons.significant, title: "Стрелка", modelAction360: "window.location.href = 'str/panarams/panorama_strelka.html';"}
         ];
 
@@ -221,11 +239,20 @@
           // информационного контента. Если вдруг такое снова появится,
           // вместо null передаем путь к пустой модели "files/3D_files/none.glb"
           showModel(null, true); // Показываем пустую 3D модель и iframe.
-          document.querySelector('#iframo-pedia').src = `str/iframo-pedia/${page}?timestamp=${Date.now()}`; // Загружаем информацию в iframe
+          document.querySelector('#iframo-pedia').src = `str/iframo-pedia/${page}/text.html?timestamp=${Date.now()}`; // Загружаем информацию в iframe
+        }
+
+        // Функция для отображения картинок
+        function showImages(page) {
+          // Раньше был баг с отображением открытой модели позади
+          // информационного контента. Если вдруг такое снова появится,
+          // вместо null передаем путь к пустой модели "files/3D_files/none.glb"
+          showModel(null, true); // Показываем пустую 3D модель и iframe.
+          document.querySelector('#iframo-pedia').src = `str/iframo-pedia/${page}/images.html?timestamp=${Date.now()}`; // Загружаем информацию в iframe
         }
 
         // Функция для создания маркера
-        function createMarker({ location, icon, title, modelAction360, modelAction3D, infoAction, tourAction, videoAction }) {
+        function createMarker({ location, icon, title, modelAction360, modelAction3D, infoAction, tourAction, videoAction, imagesAction }) {
             const popupContent = `
                 ${title} <br><br>
                 <p style="text-align: center;">
@@ -233,6 +260,7 @@
                     ${modelAction360 ? `<button onclick="${modelAction360}">360°</button>` : ''}
                     ${tourAction ? `<button onclick="${tourAction}">Тур 360°</button>` : ''}
                     ${infoAction ? `<button onclick="${infoAction}">Информация</button>` : ''}
+                    ${imagesAction ? `<button onclick="${imagesAction}">Картинки</button>` : ''}
                     ${videoAction ? `<button onclick="${videoAction}">Видео</button>` : ''}
                 </p>`; // Создаем содержимое всплывающего окна маркера
 
