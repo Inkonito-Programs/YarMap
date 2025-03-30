@@ -137,7 +137,7 @@
             significantBacklight: L.icon({ iconUrl: 'files/other/360-view_backlight.png', iconSize: [18, 18], iconAnchor: [9.5, 9.5] }) // Подсвеченная иконка для маркеров с 360-градусным обзором
         };
 
-        // Координаты маркеров (Тут нет маркера для стрелки!!! Добавить!!!)
+        // Координаты маркеров
         const markerLocations = {
             number1: [95.5, 932.5],
             number2: [110.0, 872.0],
@@ -213,14 +213,65 @@
               infoAction: "showInfo('The Church of St. Nicholas the Chopped')",
               imagesAction: "showImages('The Church of St. Nicholas the Chopped')"},
 
-            { location: markerLocations.number3, icon: icons.regular, title: "Ильинско-Тихоновская церковь", modelAction3D: "model3()", infoAction: "showInfo('Ilyinsko - Tikhonovskaya Church')" },
-            { location: markerLocations.number5, icon: icons.regular, title: "Церковь Иоанна Златауста", modelAction3D: "model5()" },
-            { location: markerLocations.number7, icon: icons.regular, title: "Архиерейский дом (бывш. митрополичьи палаты)", modelAction3D: "model7()" },
-            { location: markerLocations.number13, icon: icons.regular, title: "Церковь Николы Надеина", modelAction3D: "model13()" },
-            { location: markerLocations.number23, icon: icons.regular, title: "Церковь Архангела Михаила", modelAction3D: "model23()", tourAction: "window.location.href = 'str/tours/ArkhangelMikhael/index.html';", videoAction: "window.open('https://vkvideo.ru/video-83055312_456239040', '_blank');", infoAction: "showInfo('Church_of_the_Archangel_Michael')"},
-            { location: markerLocations.number68, icon: icons.significant, title: "Церковь Богоявления Господня", modelAction3D: "model68()", modelAction360: "window.location.href = 'str/panarams/panorama_yar10.html';", infoAction: "showInfo('Church of the Epiphany')" },
-            { location: markerLocations.number70, icon: icons.regular, title: "Церковь Симеона Столпника", modelAction3D: "model70()", infoAction: "showInfo('cerkov_simeona_stolpnica')" },
-            { location: markerLocations.number71, icon: icons.regular, title: "Благовещенская церковь", modelAction3D: "model71()" },
+            { location: markerLocations.number3,
+              icon: icons.regular,
+              title: "Ильинско-Тихоновская церковь",
+              modelAction3D: "model3()",
+              infoAction: "showInfo('Ilyinsko - Tikhonovskaya Church')",
+              imagesAction: "showImages('Ilyinsko - Tikhonovskaya Church')"},
+
+            { location: markerLocations.number5,
+              icon: icons.regular,
+              title: "Церковь Иоанна Златауста",
+              modelAction3D: "model5()",
+              infoAction: "showInfo('St. John Chrysostom Church')",
+              imagesAction: "showImages('St. John Chrysostom Church')"},
+
+            { location: markerLocations.number7,
+              icon: icons.regular,
+              title: "Архиерейский дом (бывш. метрополичьи палаты)",
+              modelAction3D: "model7()",
+              infoAction: "showInfo('Bishop`s House (formerly metropolitan chambers)')",
+              imagesAction: "showImages('Bishop`s House (formerly metropolitan chambers)')"},
+
+            { location: markerLocations.number13,
+              icon: icons.regular,
+              title: "Церковь Николы Надеина",
+              modelAction3D: "model13()",
+              infoAction: "showInfo('Church of St. Nicholas Nadein')",
+              imagesAction: "showImages('Church of St. Nicholas Nadein')"},
+
+            { location: markerLocations.number23,
+              icon: icons.regular,
+              title: "Церковь Архангела Михаила",
+              modelAction3D: "model23()",
+              tourAction: "window.location.href = 'str/tours/ArkhangelMikhael/index.html';",
+              videoAction: "window.open('https://vkvideo.ru/video-83055312_456239040', '_blank');",
+              infoAction: "showInfo('Church of the Archangel Michael')",
+              imagesAction: "showImages('Church of the Archangel Michael')"},
+
+            { location: markerLocations.number68,
+              icon: icons.significant,
+              title: "Церковь Богоявления Господня",
+              modelAction3D: "model68()",
+              modelAction360: "window.location.href = 'str/panarams/panorama_yar10.html';",
+              infoAction: "showInfo('Church of the Epiphany of the Lord')",
+              imagesAction: "showImages('Church of the Epiphany of the Lord')"},
+
+            { location: markerLocations.number70,
+              icon: icons.regular,
+              title: "Церковь Симеона Столпника",
+              modelAction3D: "model70()",
+              infoAction: "showInfo('Simeon Stylites Church')",
+              imagesAction: "showImages('Simeon Stylites Church')"},
+
+            { location: markerLocations.number71,
+              icon: icons.regular,
+              title: "Благовещенская церковь",
+              modelAction3D: "model71()",
+              infoAction: "showInfo('Annunciation Church')",
+              imagesAction: "showImages('Annunciation Church')"},
+
             { location: markerLocations.number83, icon: icons.regular, title: "Церковь Дмитрия Солунского", modelAction3D: "model83()" },
             { location: markerLocations.number84, icon: icons.regular, title: "Владимерская церковь (на Божедомке)", modelAction3D: "model2()", infoAction: "showInfo('Church on bozhedomka')" },
             { location: markerLocations.strelka, icon: icons.significant, title: "Стрелка", modelAction360: "window.location.href = 'str/panarams/panorama_strelka.html';"}
