@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <script src="../../../js/iframo-pedia/gallery.js"></script> <!--JS галереи-->
+    <link rel="stylesheet" href="../../../css/iframo-pedia/gallery.css"> <!--CSS галереи-->
+    <link href="../../../css/iframo-pedia/scrol_bar.css" rel="stylesheet" type="text/css" media="screen" > <!--Скрол бар-->
+  </head>
+  <body>
+
+    <h1>Нажми на картинку</h1>
+
+    <div class="gallery">
+        <img src="../../../files/iframo-pedia/Church of Elijah the Prophet/1.jpg" alt="Image 1">
+        <img src="../../../files/iframo-pedia/Church of Elijah the Prophet/2.jpg" alt="Image 2">
+        <img src="../../../files/iframo-pedia/Church of Elijah the Prophet/3.jpg" alt="Image 3">
+        <img src="../../../files/iframo-pedia/Church of Elijah the Prophet/4.jpg" alt="Image 4">
+        <img src="../../../files/iframo-pedia/Church of Elijah the Prophet/5.jpg" alt="Image 5">
+        <img src="../../../files/iframo-pedia/Church of Elijah the Prophet/6.jpg" alt="Image 6">
+    </div>
+
+    <!-- Lightbox контейнер -->
+    <div id="lightbox">
+        <!-- Кнопка закрыть -->
+        <span id="close-btn">&times;</span>
+
+        <!-- Main lightbox картинка -->
+        <img id="lightbox-img" src="" alt="lightbox image">
+
+        <!-- Кнопки prev и next -->
+        <div class="div_with_prev_and_next_btn">
+          <button id="prev-btn">&lt; Prev</button>
+          <button id="next-btn">Next &gt;</button>
+        </div>
+
+        <!-- Thumbnails контейнер -->
+        <div id="thumbnail-container">
+            <!-- Thumbnails будет добавляться динамически с помощью JavaScript -->
+        </div>
+    </div>
+  </body>
+</html>
