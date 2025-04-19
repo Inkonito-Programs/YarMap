@@ -112,42 +112,42 @@
 
     <script>
         // Конфигурация карты
-        const MAP_BOUNDS = [[0, 0], [1000, 1000]]; // Границы карты в координатах (x, y)
-        const MAP_CENTER = [500, 500]; // Центр карты в координатах (x, y)
-        const MAP_ZOOM = -1; // Начальный уровень масштабирования карты
+        const MAP_BOUNDS = [[0, 0], [1000, 1000]];
+        const MAP_CENTER = [500, 500];
+        const MAP_ZOOM = -1;
 
-        // Инициализация карты с использованием библиотеки Leaflet
+        // Инициализация карты
         const map = L.map('map', {
-            crs: L.CRS.Simple, // Используем простую систему координат (без привязки к реальным географическим координатам)
-            minZoom: -1, // Минимальный уровень масштабирования
-            maxZoom: 4 // Максимальный уровень масштабирования
+            crs: L.CRS.Simple,
+            minZoom: -1,
+            maxZoom: 4
         });
 
         // Установка границ и изображения карты
-        const bounds = MAP_BOUNDS.map(([x, y]) => L.latLng(y, x)); // Преобразуем координаты границ в формат, понятный Leaflet
-        L.imageOverlay('files/maps/old_Yaroslavl.webp', bounds).addTo(map); // Накладываем изображение карты на карту
-        map.setMaxBounds(L.latLngBounds(bounds)); // Устанавливаем границы карты
-        map.setView(L.latLng(...MAP_CENTER), MAP_ZOOM); // Устанавливаем центр карты и уровень масштабирования
+        const bounds = MAP_BOUNDS.map(([x, y]) => L.latLng(y, x));
+        L.imageOverlay('files/maps/old_Yaroslavl.webp', bounds).addTo(map);
+        map.setMaxBounds(L.latLngBounds(bounds));
+        map.setView(L.latLng(...MAP_CENTER), MAP_ZOOM);
 
         // Иконки маркеров
         const icons = {
             regular: (zoom) => L.icon({
-                iconUrl: 'files/other/3d-cube.png',
+                iconUrl: 'files/other/regular.png',
                 iconSize: [10 * Math.pow(1.3, zoom - MAP_ZOOM), 10 * Math.pow(1.3, zoom - MAP_ZOOM)],
                 iconAnchor: [5 * Math.pow(1.3, zoom - MAP_ZOOM), 5 * Math.pow(1.3, zoom - MAP_ZOOM)]
             }),
             regularBacklight: (zoom) => L.icon({
-                iconUrl: 'files/other/3d-cube_backlight.png',
+                iconUrl: 'files/other/regular_backlight.png',
                 iconSize: [10 * Math.pow(1.3, zoom - MAP_ZOOM), 10 * Math.pow(1.3, zoom - MAP_ZOOM)],
                 iconAnchor: [5 * Math.pow(1.3, zoom - MAP_ZOOM), 5 * Math.pow(1.3, zoom - MAP_ZOOM)]
             }),
             significant: L.icon({
-                iconUrl: 'files/other/360-view.png',
+                iconUrl: 'files/other/significant.png',
                 iconSize: [18, 18],
                 iconAnchor: [9.5, 9.5]
             }),
             significantBacklight: L.icon({
-                iconUrl: 'files/other/360-view_backlight.png',
+                iconUrl: 'files/other/significant_backlight.png',
                 iconSize: [18, 18],
                 iconAnchor: [9.5, 9.5]
             })
@@ -171,7 +171,16 @@
             number16: [262.0, 738.0],
             number17: [348.5, 799.5],
             number18: [293.5, 838.5],
+            number19: [222.5, 847.0],
+            number20: [211.5, 850.0],
+            number21: [209.0, 800.0],
+            number22: [120.0, 831.0],
             number23: [120.0, 780.0],
+            number24: [223.0, 838.0],
+            number25: [113.0, 711.0],
+            number26: [379.0, 725.0],
+            number31: [116.0, 843.0],
+            number33: [162.0, 811.0],
             number68: [130.0, 685.0],
             number70: [554.0, 735.5],
             number71: [597.0, 843.0],
@@ -180,233 +189,267 @@
             strelka: [45.0, 960.0]
         };
 
-        function model1(){
-          showModel("files/3D_files/Cathedral_of_the_Assumption_Cathedral.glb");
-        }
-        function model2(){
-          showModel("files/3D_files/Church_of_St._Nicholas_the_Chopped.glb");
-        }
-        function model3(){
-          showModel("files/3D_files/Ilyinsko-Tikhonovskaya_Church.glb");
-        }
-        function model5(){
-          showModel("files/3D_files/St._John_Chrysostom_Church.glb");
-        }
-        function model7(){
-          showModel("files/3D_files/Bishop's House_(formerly metropolitan chambers).glb");
-        }
-        function model13(){
-          showModel("files/3D_files/Church_of_St._Nicholas_Nadein.glb");
-        }
-        function model23(){
-          showModel("files/3D_files/Church_of_the_Archangel_Michael.glb");
-        }
-        function model68(){
-          showModel("files/3D_files/Church_of_the_Epiphany_of_the_Lord.glb");
-        }
-        function model70(){
-          showModel("files/3D_files/Simeon_Stylites_Church.glb");
-        }
-        function model71(){
-          showModel("files/3D_files/Annunciation_Church.glb");
-        }
-        function model83(){
-          showModel("files/3D_files/The_Church_of_Dmitry_Solunsky.glb");
-        }
-        function model84(){
-          showModel("files/3D_files/St._Vladimir's_Church_(on Bozhedomka).glb");
-        }
-
-        // Данные маркеров
-        // :param location: Переменная - номер объекта на карте (содержит координаты объекта)
-        // :param icon:
-        // :param title: Название объекта
-        // :param modelAction3D: Функция для показа 3D модели
-        // :param infoAction: Функция для показа информации по объекту, с вложенным в нее параметром - названием папки с контентом по объекту
-        // :param imagesAction: Функция для показа галереи по объекту, с вложенным в нее параметром - названием папки с контентом по объекту
+        // Данные маркеров с путями к 3D моделям
         const markersData = [
-            { location: markerLocations.number1,
-              icon: icons.regular,
-              title: "Кафедральный Успенский собор",
-              modelAction3D: "model1()",
-              infoAction: "showInfo('Cathedral of the Assumption Cathedral')",
-              imagesAction: "showImages('Cathedral of the Assumption Cathedral')"},
-
-            { location: markerLocations.number2,
-              icon: icons.regular,
-              title: "Церковь Николы Рубленого",
-              modelAction3D: "model2()",
-              infoAction: "showInfo('The Church of St. Nicholas the Chopped')",
-              imagesAction: "showImages('The Church of St. Nicholas the Chopped')"},
-
-            { location: markerLocations.number3,
-              icon: icons.regular,
-              title: "Толгская церковь",
-              infoAction: "showInfo('Tolga Church')"},
-
-            { location: markerLocations.number4,
-              icon: icons.regular,
-              title: "Ильинско-Тихоновская церковь",
-              modelAction3D: "model3()",
-              infoAction: "showInfo('Ilyinsko - Tikhonovskaya Church')",
-              imagesAction: "showImages('Ilyinsko - Tikhonovskaya Church')"},
-
-            { location: markerLocations.number5,
-              icon: icons.regular,
-              title: "Церковь Иоанна Златауста",
-              modelAction3D: "model5()",
-              infoAction: "showInfo('St. John Chrysostom Church')",
-              imagesAction: "showImages('St. John Chrysostom Church')"},
-
-            { location: markerLocations.number6,
-              icon: icons.regular,
-              title: "Церковь Леонтия Чудотворца (при архиерейском доме)",
-              infoAction: "showInfo('Church of St. Leontius the Wonderworker (at the Bishop`s house)')",
-              imagesAction: "showImages('Church of St. Leontius the Wonderworker (at the Bishop`s house)')"},
-
-            { location: markerLocations.number7,
-              icon: icons.regular,
-              title: "Архиерейский дом (бывш. метрополичьи палаты)",
-              modelAction3D: "model7()",
-              infoAction: "showInfo('Bishop`s House (formerly metropolitan chambers)')",
-              imagesAction: "showImages('Bishop`s House (formerly metropolitan chambers)')"},
-
-            { location: markerLocations.number10,
-              icon: icons.regular,
-              title: "Церковь Фрола и Лавра",
-              infoAction: "showInfo('Church of Frol and Lavra')"},
-
-            { location: markerLocations.number11,
-              icon: icons.regular,
-              title: "Церковь Бориса и Глеба",
-              infoAction: "showInfo('Boris and Gleb Church')"},
-
-            { location: markerLocations.number12,
-              icon: icons.regular,
-              title: "Церковь Козьмы и Демьяна",
-              infoAction: "showInfo('Church of Kozma and Demyan')",
-              imagesAction: "showImages('Church of Kozma and Demyan')"},
-
-            { location: markerLocations.number13,
-              icon: icons.regular,
-              title: "Церковь Николы Надеина",
-              modelAction3D: "model13()",
-              infoAction: "showInfo('Church of St. Nicholas Nadein')",
-              imagesAction: "showImages('Church of St. Nicholas Nadein')"},
-
-            { location: markerLocations.number14,
-              icon: icons.regular,
-              title: "Церковь Рождества Христова",
-              infoAction: "showInfo('Church of the Nativity')",
-              imagesAction: "showImages('Church of the Nativity')"},
-
-            { location: markerLocations.number15,
-              icon: icons.regular,
-              title: "Церковь Великомученницы Варвары",
-              infoAction: "showInfo('The Church of the Great Martyr Barbara')",
-              imagesAction: "showImages('The Church of the Great Martyr Barbara')"},
-
-            { location: markerLocations.number16,
-              icon: icons.regular,
-              title: "Церковь Сретения Господня",
-              infoAction: "showInfo('The Church of the Presentation of the Lord')",
-              imagesAction: "showImages('The Church of the Presentation of the Lord')"},
-
-            { location: markerLocations.number17,
-              icon: icons.regular,
-              title: "Церковь Всех святых",
-              infoAction: "showInfo('Church of All Saints')",
-              imagesAction: "showImages('Church of All Saints')"},
-
-            { location: markerLocations.number18,
-              icon: icons.regular,
-              title: "Церковь Ильи Пророка",
-              infoAction: "showInfo('Church of Elijah the Prophet')",
-              imagesAction: "showImages('Church of Elijah the Prophet')"},
-
-            { location: markerLocations.number23,
-              icon: icons.regular,
-              title: "Церковь Архангела Михаила",
-              modelAction3D: "model23()",
-              tourAction: "window.location.href = 'str/tours/ArkhangelMikhael/index.html';",
-              videoAction: "window.open('https://vkvideo.ru/video-83055312_456239040', '_blank');",
-              infoAction: "showInfo('Church of the Archangel Michael')",
-              imagesAction: "showImages('Church of the Archangel Michael')"},
-
-            { location: markerLocations.number68,
-              icon: icons.regular,
-              title: "Церковь Богоявления Господня",
-              modelAction3D: "model68()",
-              modelAction360: "window.location.href = 'str/panarams/panorama_yar10.html';",
-              infoAction: "showInfo('Church of the Epiphany of the Lord')",
-              imagesAction: "showImages('Church of the Epiphany of the Lord')"},
-
-            { location: markerLocations.number70,
-              icon: icons.regular,
-              title: "Церковь Симеона Столпника",
-              modelAction3D: "model70()",
-              infoAction: "showInfo('Simeon Stylites Church')",
-              imagesAction: "showImages('Simeon Stylites Church')"},
-
-            { location: markerLocations.number71,
-              icon: icons.regular,
-              title: "Благовещенская церковь",
-              modelAction3D: "model71()",
-              infoAction: "showInfo('Annunciation Church')",
-              imagesAction: "showImages('Annunciation Church')"},
-
-            { location: markerLocations.number83,
-              icon: icons.regular,
-              title: "Церковь Дмитрия Солунского",
-              modelAction3D: "model83()",
-              infoAction: "showInfo('The Church of Dmitry Solunsky')",
-              imagesAction: "showImages('The Church of Dmitry Solunsky')"},
-
-            { location: markerLocations.number84,
-              icon: icons.regular,
-              title: "Владимерская церковь (на Божедомке)",
-              modelAction3D: "model84()",
-              infoAction: "showInfo('St. Vladimir`s Church (on Bozhedomka)')",
-              imagesAction: "showImages('St. Vladimir`s Church (on Bozhedomka)')"},
-
-            { location: markerLocations.strelka,
-              icon: icons.regular,
-              title: "Ярославская Стрелка",
-              modelAction360: "window.location.href = 'str/panarams/panorama_strelka.html';",
-              infoAction: "showInfo('Yaroslavskaya strelka')",
-              imagesAction: "showImages('Yaroslavskaya strelka')"},
+            {
+                location: markerLocations.number1,
+                icon: icons.regular,
+                title: "Кафедральный Успенский собор",
+                modelPath: "files/3D_files/Cathedral_of_the_Assumption_Cathedral.glb",
+                infoAction: "showInfo('Cathedral of the Assumption Cathedral')",
+                imagesAction: "showImages('Cathedral of the Assumption Cathedral')"
+            },
+            {
+                location: markerLocations.number2,
+                icon: icons.regular,
+                title: "Церковь Николы Рубленого",
+                modelPath: "files/3D_files/Church_of_St._Nicholas_the_Chopped.glb",
+                infoAction: "showInfo('The Church of St. Nicholas the Chopped')",
+                imagesAction: "showImages('The Church of St. Nicholas the Chopped')"
+            },
+            {
+                location: markerLocations.number3,
+                icon: icons.regular,
+                title: "Толгская церковь",
+                infoAction: "showInfo('Tolga Church')"
+            },
+            {
+                location: markerLocations.number4,
+                icon: icons.regular,
+                title: "Ильинско-Тихоновская церковь",
+                modelPath: "files/3D_files/Ilyinsko-Tikhonovskaya_Church.glb",
+                infoAction: "showInfo('Ilyinsko - Tikhonovskaya Church')",
+                imagesAction: "showImages('Ilyinsko - Tikhonovskaya Church')"
+            },
+            {
+                location: markerLocations.number5,
+                icon: icons.regular,
+                title: "Церковь Иоанна Златауста",
+                modelPath: "files/3D_files/St._John_Chrysostom_Church.glb",
+                infoAction: "showInfo('St. John Chrysostom Church')",
+                imagesAction: "showImages('St. John Chrysostom Church')"
+            },
+            {
+                location: markerLocations.number6,
+                icon: icons.regular,
+                title: "Церковь Леонтия Чудотворца (при архиерейском доме)",
+                infoAction: "showInfo('Church of St. Leontius the Wonderworker (at the Bishop`s house)')",
+                imagesAction: "showImages('Church of St. Leontius the Wonderworker (at the Bishop`s house)')"
+            },
+            {
+                location: markerLocations.number7,
+                icon: icons.regular,
+                title: "Архиерейский дом (бывш. метрополичьи палаты)",
+                modelPath: "files/3D_files/Bishop's House_(formerly metropolitan chambers).glb",
+                infoAction: "showInfo('Bishop`s House (formerly metropolitan chambers)')",
+                imagesAction: "showImages('Bishop`s House (formerly metropolitan chambers)')"
+            },
+            {
+                location: markerLocations.number10,
+                icon: icons.regular,
+                title: "Церковь Фрола и Лавра",
+                infoAction: "showInfo('Church of Frol and Lavra')"
+            },
+            {
+                location: markerLocations.number11,
+                icon: icons.regular,
+                title: "Церковь Бориса и Глеба",
+                infoAction: "showInfo('Boris and Gleb Church')"
+            },
+            {
+                location: markerLocations.number12,
+                icon: icons.regular,
+                title: "Церковь Козьмы и Демьяна",
+                infoAction: "showInfo('Church of Kozma and Demyan')",
+                imagesAction: "showImages('Church of Kozma and Demyan')"
+            },
+            {
+                location: markerLocations.number13,
+                icon: icons.regular,
+                title: "Церковь Николы Надеина",
+                modelPath: "files/3D_files/Church_of_St._Nicholas_Nadein.glb",
+                infoAction: "showInfo('Church of St. Nicholas Nadein')",
+                imagesAction: "showImages('Church of St. Nicholas Nadein')"
+            },
+            {
+                location: markerLocations.number14,
+                icon: icons.regular,
+                title: "Церковь Рождества Христова",
+                infoAction: "showInfo('Church of the Nativity')",
+                imagesAction: "showImages('Church of the Nativity')"
+            },
+            {
+                location: markerLocations.number15,
+                icon: icons.regular,
+                title: "Церковь Великомученницы Варвары",
+                infoAction: "showInfo('The Church of the Great Martyr Barbara')",
+                imagesAction: "showImages('The Church of the Great Martyr Barbara')"
+            },
+            {
+                location: markerLocations.number16,
+                icon: icons.regular,
+                title: "Церковь Сретения Господня",
+                infoAction: "showInfo('The Church of the Presentation of the Lord')",
+                imagesAction: "showImages('The Church of the Presentation of the Lord')"
+            },
+            {
+                location: markerLocations.number17,
+                icon: icons.regular,
+                title: "Церковь Всех святых",
+                infoAction: "showInfo('Church of All Saints')",
+                imagesAction: "showImages('Church of All Saints')"
+            },
+            {
+                location: markerLocations.number18,
+                icon: icons.regular,
+                title: "Церковь Ильи Пророка",
+                infoAction: "showInfo('Church of Elijah the Prophet')",
+                imagesAction: "showImages('Church of Elijah the Prophet')"
+            },
+            {
+                location: markerLocations.number19,
+                icon: icons.regular,
+                title: "Спасо-пробоинская церковь",
+                infoAction: "showInfo('Spaso-Proboinskaya Church')",
+                imagesAction: "showImages('Spaso-Proboinskaya Church')"
+            },
+            {
+                location: markerLocations.number20,
+                icon: icons.regular,
+                title: "Церковь Воскресения Господня",
+                infoAction: "showInfo('Church of the Resurrection of the Lord')",
+                imagesAction: "showImages('Church of the Resurrection of the Lord')"
+            },
+            {
+                location: markerLocations.number21,
+                icon: icons.regular,
+                title: "Церковь Леонтия Чудотворца",
+                infoAction: "showInfo('Church of Leontius the Wonderworker')",
+                imagesAction: "showImages('Church of Leontius the Wonderworker')"
+            },
+            {
+                location: markerLocations.number22,
+                icon: icons.regular,
+                title: "Церковь Спаса на городу",
+                infoAction: "showInfo('Church of the Savior on the City')",
+                imagesAction: "showImages('Church of the Savior on the City')"
+            },
+            {
+                location: markerLocations.number23,
+                icon: icons.regular,
+                title: "Церковь Архангела Михаила",
+                modelPath: "files/3D_files/Church_of_the_Archangel_Michael.glb",
+                tourAction: "window.location.href = 'str/tours/ArkhangelMikhael/index.html';",
+                videoAction: "window.open('https://vkvideo.ru/video-83055312_456239040', '_blank');",
+                infoAction: "showInfo('Church of the Archangel Michael')",
+                imagesAction: "showImages('Church of the Archangel Michael')"
+            },
+            {
+                location: markerLocations.number24,
+                icon: icons.regular,
+                title: "Кирилло-Афанасьевский монастырь",
+                infoAction: "showInfo('Kirillo-Afanasyevsky Monastery')",
+                imagesAction: "showImages('Kirillo-Afanasyevsky Monastery')"
+            },
+            {
+                location: markerLocations.number25,
+                icon: icons.regular,
+                title: "Спасо-преображенский монастырь",
+                infoAction: "showInfo('Spaso-Preobrazhensky Monastery')",
+                imagesAction: "showImages('Spaso-Preobrazhensky Monastery')"
+            },
+            {
+                location: markerLocations.number26,
+                icon: icons.regular,
+                title: "Казанский женский монастырь",
+                infoAction: "showInfo('Kazan Women`s Monostyr')",
+                imagesAction: "showImages('Kazan Women`s Monostyr')"
+            },
+            {
+                location: markerLocations.number31,
+                icon: icons.regular,
+                title: "Городовой магистрат",
+                infoAction: "showInfo('City Magistrate')"
+            },
+            {
+                location: markerLocations.number33,
+                icon: icons.regular,
+                title: "Землемерная чертежная",
+                infoAction: "showInfo('Land survey drawing office')"
+            },
+            {
+                location: markerLocations.number68,
+                icon: icons.regular,
+                title: "Церковь Богоявления Господня",
+                modelPath: "files/3D_files/Church_of_the_Epiphany_of_the_Lord.glb",
+                modelAction360: "window.location.href = 'str/panarams/panorama_yar10.html';",
+                infoAction: "showInfo('Church of the Epiphany of the Lord')",
+                imagesAction: "showImages('Church of the Epiphany of the Lord')"
+            },
+            {
+                location: markerLocations.number70,
+                icon: icons.regular,
+                title: "Церковь Симеона Столпника",
+                modelPath: "files/3D_files/Simeon_Stylites_Church.glb",
+                infoAction: "showInfo('Simeon Stylites Church')",
+                imagesAction: "showImages('Simeon Stylites Church')"
+            },
+            {
+                location: markerLocations.number71,
+                icon: icons.regular,
+                title: "Благовещенская церковь",
+                modelPath: "files/3D_files/Annunciation_Church.glb",
+                infoAction: "showInfo('Annunciation Church')",
+                imagesAction: "showImages('Annunciation Church')"
+            },
+            {
+                location: markerLocations.number83,
+                icon: icons.regular,
+                title: "Церковь Дмитрия Солунского",
+                modelPath: "files/3D_files/The_Church_of_Dmitry_Solunsky.glb",
+                infoAction: "showInfo('The Church of Dmitry Solunsky')",
+                imagesAction: "showImages('The Church of Dmitry Solunsky')"
+            },
+            {
+                location: markerLocations.number84,
+                icon: icons.regular,
+                title: "Владимерская церковь (на Божедомке)",
+                modelPath: "files/3D_files/St._Vladimir's_Church_(on Bozhedomka).glb",
+                infoAction: "showInfo('St. Vladimir`s Church (on Bozhedomka)')",
+                imagesAction: "showImages('St. Vladimir`s Church (on Bozhedomka)')"
+            },
+            {
+                location: markerLocations.strelka,
+                icon: icons.regular,
+                title: "Ярославская Стрелка",
+                modelAction360: "window.location.href = 'str/panarams/panorama_strelka.html';",
+                infoAction: "showInfo('Yaroslavskaya strelka')",
+                imagesAction: "showImages('Yaroslavskaya strelka')"
+            }
         ];
 
         // Функция для отображения 3D модели
         function showModel(modelSrc, showIframopedia = false) {
-            document.getElementById('modelHram').src = modelSrc; // Устанавливаем источник для 3D модели
-            document.getElementById('win1').style.display = 'flex'; // Показываем окно с 3D моделью
-            document.getElementById('iframo-pedia').style.display = showIframopedia ? 'block' : 'none'; // Показываем или скрываем iframe с дополнительной информацией
+            document.getElementById('modelHram').src = modelSrc;
+            document.getElementById('win1').style.display = 'flex';
+            document.getElementById('iframo-pedia').style.display = showIframopedia ? 'block' : 'none';
         }
 
         // Функция для отображения информации
         function showInfo(page) {
-          // Раньше был баг с отображением открытой модели позади
-          // информационного контента. Если вдруг такое снова появится,
-          // вместо null передаем путь к пустой модели "files/3D_files/none.glb"
-          showModel(null, true); // Показываем пустую 3D модель и iframe.
-          document.querySelector('#iframo-pedia').src = `str/iframo-pedia/${page}/text.html?timestamp=${Date.now()}`; // Загружаем информацию в iframe
+            showModel(null, true);
+            document.querySelector('#iframo-pedia').src = `str/iframo-pedia/${page}/text.html?timestamp=${Date.now()}`;
         }
 
         // Функция для отображения картинок
         function showImages(page) {
-          // Раньше был баг с отображением открытой модели позади
-          // информационного контента. Если вдруг такое снова появится,
-          // вместо null передаем путь к пустой модели "files/3D_files/none.glb"
-          showModel(null, true); // Показываем пустую 3D модель и iframe.
-          document.querySelector('#iframo-pedia').src = `str/iframo-pedia/${page}/images.html?timestamp=${Date.now()}`; // Загружаем информацию в iframe
+            showModel(null, true);
+            document.querySelector('#iframo-pedia').src = `str/iframo-pedia/${page}/images.html?timestamp=${Date.now()}`;
         }
 
-        function createMarker({ location, icon, title, modelAction360, modelAction3D, infoAction, tourAction, videoAction, imagesAction }) {
-            // Получаем текущий зум
+        function createMarker({ location, icon, title, modelPath, modelAction360, infoAction, tourAction, videoAction, imagesAction }) {
             const currentZoom = map.getZoom();
 
-            // Создаем иконку в зависимости от типа
             let markerIcon;
             if (icon === icons.regular) {
                 markerIcon = icons.regular(currentZoom);
@@ -419,7 +462,7 @@
             const popupContent = `
                 ${title} <br><br>
                 <p style="text-align: center;">
-                    ${modelAction3D ? `<button onclick="${modelAction3D}">3D</button>` : ''}
+                    ${modelPath ? `<button onclick="showModel('${modelPath}')">3D</button>` : ''}
                     ${modelAction360 ? `<button onclick="${modelAction360}">360°</button>` : ''}
                     ${tourAction ? `<button onclick="${tourAction}">Тур 360°</button>` : ''}
                     ${infoAction ? `<button onclick="${infoAction}">Информация</button>` : ''}
@@ -452,9 +495,10 @@
         }
 
         // Создание и добавление маркеров на карту
-        const markers = markersData.map(markerData => createMarker(markerData)); // Создаем маркеры на основе данных
-        markers.forEach(marker => marker.addTo(map)); // Добавляем маркеры на карту
+        const markers = markersData.map(markerData => createMarker(markerData));
+        markers.forEach(marker => marker.addTo(map));
 
+        // Обработчик изменения масштаба
         map.on('zoomend', function() {
             const currentZoom = map.getZoom();
 
@@ -479,36 +523,39 @@
 
         // Обработчик кликов по ссылкам в iframe
         function handleIframeLinkClick(event) {
-            const clickedTitle = event.target.textContent.trim().replace(/^\d+\.\s*/, ''); // Получаем текст ссылки, по которой кликнули
-            const correspondingMarkerData = markersData.find(marker => marker.title === clickedTitle); // Ищем соответствующий маркер
+            event.preventDefault();
+            const clickedTitle = event.target.textContent.trim().replace(/^\d+\.\s*/, '');
+            const correspondingMarkerData = markersData.find(marker => marker.title === clickedTitle);
 
             if (correspondingMarkerData) {
                 const correspondingMarker = markers.find(marker => {
                     const markerLatLng = marker.getLatLng();
                     return markerLatLng.lat === correspondingMarkerData.location[0] &&
                            markerLatLng.lng === correspondingMarkerData.location[1];
-                }); // Находим маркер на карте
+                });
 
                 if (correspondingMarker) {
-                    correspondingMarker.openPopup(); // Открываем всплывающее окно маркера
-                    correspondingMarker.setIcon(correspondingMarkerData.icon === icons.custom ? icons.customBacklight : icons.tours360Backlight); // Подсвечиваем иконку маркера
-                    resetMarkers(correspondingMarker); // Сбрасываем иконки остальных маркеров
+                    const currentZoom = map.getZoom();
+                    let newIcon;
+                    if (correspondingMarkerData.icon === icons.regular) {
+                        newIcon = icons.regularBacklight(currentZoom);
+                    } else if (correspondingMarkerData.icon === icons.significant) {
+                        newIcon = icons.significantBacklight;
+                    } else {
+                        newIcon = correspondingMarkerData.icon;
+                    }
+
+                    correspondingMarker.setIcon(newIcon);
+                    correspondingMarker.openPopup();
+                    map.setView(correspondingMarker.getLatLng(), currentZoom);
+                    resetMarkers(correspondingMarker);
                 }
             }
         }
 
-        // Инициализация обработчика iframe
-        document.getElementById('myFrame').onload = function() {
-            const iframeDocument = this.contentDocument || this.contentWindow.document;
-            const links = iframeDocument.getElementsByTagName('a'); // Получаем все ссылки в iframe
-
-            Array.from(links).forEach(link => {
-                link.addEventListener('click', handleIframeLinkClick); // Добавляем обработчик клика на каждую ссылку
-            });
-        };
-
         // Функция для сброса иконок маркеров
         function resetMarkers(exceptMarker) {
+            const currentZoom = map.getZoom();
             markers.forEach(marker => {
                 if (marker !== exceptMarker) {
                     const markerData = markersData.find(data => {
@@ -516,31 +563,138 @@
                         return markerLatLng.lat === data.location[0] &&
                                markerLatLng.lng === data.location[1];
                     });
-                    if (markerData) marker.setIcon(markerData.icon); // Возвращаем обычную иконку маркера
+                    if (markerData) {
+                        if (markerData.icon === icons.regular || markerData.icon === icons.regularBacklight) {
+                            marker.setIcon(icons.regular(currentZoom));
+                        } else {
+                            marker.setIcon(markerData.icon);
+                        }
+                    }
                 }
             });
         }
 
+        // Инициализация обработчика iframe
+        document.getElementById('myFrame').onload = function() {
+            const iframeDocument = this.contentDocument || this.contentWindow.document;
+            const links = iframeDocument.getElementsByTagName('a');
+
+            Array.from(links).forEach(link => {
+                link.addEventListener('click', handleIframeLinkClick);
+            });
+        };
+
         // Обработчики событий
         document.getElementById('notify-button').addEventListener('click', () => {
-            alert("Связь с разработчиком: ip-feedback@mail.ru \nТелефон музея: Тел: 8 (4852) 30-41-75"); // Показываем контактную информацию
+            alert("Связь с разработчиком: ip-feedback@mail.ru \nТелефон музея: Тел: 8 (4852) 30-41-75");
         });
 
         document.getElementById('left_menu').addEventListener('click', () => {
-            markers.forEach(marker => marker.closePopup()); // Закрываем все всплывающие окна маркеров
+            markers.forEach(marker => marker.closePopup());
         });
 
         document.querySelector('.close').addEventListener('click', () => {
-            document.getElementById('win1').style.display = 'none'; // Скрываем окно с 3D моделью
+            document.getElementById('win1').style.display = 'none';
         });
 
         // Проверка месяца для запуска снега
         const currentDate = new Date();
-        const currentMonth = currentDate.getMonth(); // Получаем текущий месяц
+        const currentMonth = currentDate.getMonth();
 
-        if ([11, 0, 1].includes(currentMonth)) { // Если текущий месяц - декабрь, январь или февраль
-            new Snow(); // Запускаем эффект снега
+        if ([11, 0, 1].includes(currentMonth)) {
+            new Snow();
         }
     </script>
+
+    <script>
+        // Переменная для отслеживания состояния комбинации клавиш
+        let isCtrlKeyPressed = false;
+        let isBackquotePressed = false;
+
+        // Обработчики нажатия клавиш
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey) isCtrlKeyPressed = true;
+            if (e.key === 'ё' || e.key === '`' || e.code === 'Backquote') isBackquotePressed = true;
+
+            // Визуальный индикатор режима
+            if (isCtrlKeyPressed && isBackquotePressed) {
+                document.body.classList.add('coords-mode');
+            }
+        });
+
+        document.addEventListener('keyup', function(e) {
+            if (e.key === 'Control') isCtrlKeyPressed = false;
+            if (e.key === 'ё' || e.key === '`' || e.code === 'Backquote') isBackquotePressed = false;
+
+            // Удаляем индикатор и попап с координатами
+            document.body.classList.remove('coords-mode');
+            if (map._coordsPopup) {
+                map.removeLayer(map._coordsPopup);
+                map._coordsPopup = null;
+            }
+        });
+
+        // Обработчик движения мыши по карте
+        map.on('mousemove', function(e) {
+            if (isCtrlKeyPressed && isBackquotePressed) {
+                const mouseCoords = e.latlng;
+                const x = mouseCoords.lng.toFixed(2);
+                const y = mouseCoords.lat.toFixed(2);
+
+                if (!map._coordsPopup) {
+                    map._coordsPopup = L.popup({
+                        closeButton: false,
+                        autoClose: false,
+                        closeOnClick: false,
+                        className: 'coords-popup'
+                    })
+                    .setLatLng(e.latlng)
+                    .setContent(`X: ${x}, Y: ${y}`)
+                    .openOn(map);
+                } else {
+                    map._coordsPopup
+                        .setLatLng(e.latlng)
+                        .setContent(`X: ${x}, Y: ${y}`);
+                }
+            }
+        });
+
+        // Стили для отображения
+        const style = document.createElement('style');
+        style.textContent = `
+            .coords-mode {
+                cursor: crosshair !important;
+            }
+            .coords-mode::after {
+                content: "Режим просмотра координат (Ctrl + Ё)";
+                position: fixed;
+                bottom: 10px;
+                right: 10px;
+                background: rgba(0,0,0,0.7);
+                color: white;
+                padding: 5px 10px;
+                border-radius: 5px;
+                z-index: 1000;
+                font-family: Arial, sans-serif;
+                font-size: 14px;
+            }
+            .coords-popup .leaflet-popup-content-wrapper {
+                background: rgba(0,0,0,0.7);
+                color: white;
+                border-radius: 4px;
+                box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            }
+            .coords-popup .leaflet-popup-content {
+                margin: 5px 10px;
+                font-size: 14px;
+                font-family: monospace;
+            }
+            .coords-popup .leaflet-popup-tip {
+                background: rgba(0,0,0,0.7);
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+
   </body>
 </html>
