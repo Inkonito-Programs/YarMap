@@ -28,7 +28,7 @@
     <!--Верхнее мобильное меню-->
     <div class="top_menu_mobail">
       <div class="top_menu_div_with_mobail_logo">
-        <img src="files/logo.png" alt="">
+        <img src="files/logo.png">
       </div>
       <div class="top_menu_div_with_mobail_text">
         <p align="center" >ГОРОД ЯРОСЛАВЛЬ</p>
@@ -55,7 +55,9 @@
     <div id="left_menu" class="left_menu">
       <!--Блок с логотипом-->
       <div class="div_with_logo">
-        <img src="files/logo.png" alt="">
+        <a href="#" id="notify-button">
+          <img src="files/logo.png" alt="">
+        </a>
       </div>
 
       <!--Блок с путеводителем-->
@@ -71,7 +73,7 @@
       <div class="div_with_info">
         <!--Блок с наполнением-->
         <div class="info_text">
-          <p align="center"><a id="notify-button" href="#">О САЙТЕ</a></p>
+          <p align="center"><a href="#" onclick="showImages('Engravings'); document.getElementById('myHeading').textContent = 'ГРАВЮРЫ'; return false;">ГРАВЮРЫ</a></p>
           <hr>
           <a href="#" onclick="window.open('https://rutube.ru/video/98f25d07ad66eb5a2add61fa56209ed5/?ysclid=m5xtflus7o87399491', '_blank');">ВИДЕО О КАРТЕ</a>
         </div>
@@ -141,15 +143,15 @@
                 iconSize: [10 * Math.pow(1.3, zoom - MAP_ZOOM), 10 * Math.pow(1.3, zoom - MAP_ZOOM)],
                 iconAnchor: [5 * Math.pow(1.3, zoom - MAP_ZOOM), 5 * Math.pow(1.3, zoom - MAP_ZOOM)]
             }),
-            significant: L.icon({
+            significant: (zoom) => L.icon({  // Теперь принимает zoom
                 iconUrl: 'files/other/significant.png',
-                iconSize: [18, 18],
-                iconAnchor: [9.5, 9.5]
+                iconSize: [10 * Math.pow(1.3, zoom - MAP_ZOOM), 10 * Math.pow(1.3, zoom - MAP_ZOOM)],
+                iconAnchor: [5 * Math.pow(1.3, zoom - MAP_ZOOM), 5 * Math.pow(1.3, zoom - MAP_ZOOM)]
             }),
-            significantBacklight: L.icon({
+            significantBacklight: (zoom) => L.icon({  // Теперь принимает zoom
                 iconUrl: 'files/other/significant_backlight.png',
-                iconSize: [18, 18],
-                iconAnchor: [9.5, 9.5]
+                iconSize: [10 * Math.pow(1.3, zoom - MAP_ZOOM), 10 * Math.pow(1.3, zoom - MAP_ZOOM)],
+                iconAnchor: [5 * Math.pow(1.3, zoom - MAP_ZOOM), 5 * Math.pow(1.3, zoom - MAP_ZOOM)]
             })
         };
 
@@ -162,6 +164,8 @@
             number5: [130.0, 928.0],
             number6: [108.0, 942.0],
             number7: [128.0, 942.5],
+            number8: [110.0, 950.5],//
+            number9: [79.0, 933.0],//
             number10: [170.0, 888.0],
             number11: [229.0, 910.0],
             number12: [244.0, 883.0],
@@ -181,6 +185,9 @@
             number26: [379.0, 725.0],
             number31: [116.0, 843.0],
             number33: [162.0, 811.0],
+            number35: [169.0, 803.0],//
+            number36: [155.5, 793.5],//
+            number38: [130.0, 813.5],//
             number68: [130.0, 685.0],
             number70: [554.0, 735.5],
             number71: [597.0, 843.0],
@@ -193,7 +200,7 @@
         const markersData = [
             {
                 location: markerLocations.number1,
-                icon: icons.regular,
+                icon: icons.significant,
                 title: "Кафедральный Успенский собор",
                 modelPath: "files/3D_files/Cathedral_of_the_Assumption_Cathedral.glb",
                 infoAction: "showInfo('Cathedral of the Assumption Cathedral')",
@@ -201,7 +208,7 @@
             },
             {
                 location: markerLocations.number2,
-                icon: icons.regular,
+                icon: icons.significant,
                 title: "Церковь Николы Рубленого",
                 modelPath: "files/3D_files/Church_of_St._Nicholas_the_Chopped.glb",
                 infoAction: "showInfo('The Church of St. Nicholas the Chopped')",
@@ -215,7 +222,7 @@
             },
             {
                 location: markerLocations.number4,
-                icon: icons.regular,
+                icon: icons.significant,
                 title: "Ильинско-Тихоновская церковь",
                 modelPath: "files/3D_files/Ilyinsko-Tikhonovskaya_Church.glb",
                 infoAction: "showInfo('Ilyinsko - Tikhonovskaya Church')",
@@ -223,7 +230,7 @@
             },
             {
                 location: markerLocations.number5,
-                icon: icons.regular,
+                icon: icons.significant,
                 title: "Церковь Иоанна Златауста",
                 modelPath: "files/3D_files/St._John_Chrysostom_Church.glb",
                 infoAction: "showInfo('St. John Chrysostom Church')",
@@ -238,11 +245,22 @@
             },
             {
                 location: markerLocations.number7,
-                icon: icons.regular,
+                icon: icons.significant,
                 title: "Архиерейский дом (бывш. метрополичьи палаты)",
-                modelPath: "files/3D_files/Bishop's House_(formerly metropolitan chambers).glb",
+                modelPath: "files/3D_files/Bishop`s House_(formerly metropolitan chambers).glb",
                 infoAction: "showInfo('Bishop`s House (formerly metropolitan chambers)')",
                 imagesAction: "showImages('Bishop`s House (formerly metropolitan chambers)')"
+            },
+            {
+                location: markerLocations.number8,
+                icon: icons.regular,
+                title: "Флигель и хоз. постройки при архиерейском доме",
+            },
+            {
+                location: markerLocations.number9,
+                icon: icons.regular,
+                title: "Комендантский дом (бывш. воеводский)",
+                infoAction: "showInfo('The Commandant`s House (formerly voivodsky)')",
             },
             {
                 location: markerLocations.number10,
@@ -265,7 +283,7 @@
             },
             {
                 location: markerLocations.number13,
-                icon: icons.regular,
+                icon: icons.significant,
                 title: "Церковь Николы Надеина",
                 modelPath: "files/3D_files/Church_of_St._Nicholas_Nadein.glb",
                 infoAction: "showInfo('Church of St. Nicholas Nadein')",
@@ -336,7 +354,7 @@
             },
             {
                 location: markerLocations.number23,
-                icon: icons.regular,
+                icon: icons.significant,
                 title: "Церковь Архангела Михаила",
                 modelPath: "files/3D_files/Church_of_the_Archangel_Michael.glb",
                 tourAction: "window.location.href = 'str/tours/ArkhangelMikhael/index.html';",
@@ -378,8 +396,24 @@
                 infoAction: "showInfo('Land survey drawing office')"
             },
             {
-                location: markerLocations.number68,
+                location: markerLocations.number35,
                 icon: icons.regular,
+                title: "Дворянская гимназия",
+                infoAction: "showInfo('Noble Gymnasium')"
+            },
+            {
+                location: markerLocations.number36,
+                icon: icons.regular,
+                title: "Кухня дворянской гимназии",
+            },
+            {
+                location: markerLocations.number38,
+                icon: icons.regular,
+                title: "'Красная' богадельня с городовой школой (бывшю кладовой анбар и двор купца Барсова)",
+            },
+            {
+                location: markerLocations.number68,
+                icon: icons.significant,
                 title: "Церковь Богоявления Господня",
                 modelPath: "files/3D_files/Church_of_the_Epiphany_of_the_Lord.glb",
                 modelAction360: "window.location.href = 'str/panarams/panorama_yar10.html';",
@@ -388,7 +422,7 @@
             },
             {
                 location: markerLocations.number70,
-                icon: icons.regular,
+                icon: icons.significant,
                 title: "Церковь Симеона Столпника",
                 modelPath: "files/3D_files/Simeon_Stylites_Church.glb",
                 infoAction: "showInfo('Simeon Stylites Church')",
@@ -396,7 +430,7 @@
             },
             {
                 location: markerLocations.number71,
-                icon: icons.regular,
+                icon: icons.significant,
                 title: "Благовещенская церковь",
                 modelPath: "files/3D_files/Annunciation_Church.glb",
                 infoAction: "showInfo('Annunciation Church')",
@@ -404,7 +438,7 @@
             },
             {
                 location: markerLocations.number83,
-                icon: icons.regular,
+                icon: icons.significant,
                 title: "Церковь Дмитрия Солунского",
                 modelPath: "files/3D_files/The_Church_of_Dmitry_Solunsky.glb",
                 infoAction: "showInfo('The Church of Dmitry Solunsky')",
@@ -412,15 +446,15 @@
             },
             {
                 location: markerLocations.number84,
-                icon: icons.regular,
-                title: "Владимерская церковь (на Божедомке)",
-                modelPath: "files/3D_files/St._Vladimir's_Church_(on Bozhedomka).glb",
+                icon: icons.significant,
+                title: "Владимирская церковь (на Божедомке)",
+                modelPath: "files/3D_files/St._Vladimir`s_Church_(on Bozhedomka).glb",
                 infoAction: "showInfo('St. Vladimir`s Church (on Bozhedomka)')",
                 imagesAction: "showImages('St. Vladimir`s Church (on Bozhedomka)')"
             },
             {
                 location: markerLocations.strelka,
-                icon: icons.regular,
+                icon: icons.significant,
                 title: "Ярославская Стрелка",
                 modelAction360: "window.location.href = 'str/panarams/panorama_strelka.html';",
                 infoAction: "showInfo('Yaroslavskaya strelka')",
@@ -450,12 +484,13 @@
         function createMarker({ location, icon, title, modelPath, modelAction360, infoAction, tourAction, videoAction, imagesAction }) {
             const currentZoom = map.getZoom();
 
+            // Создаем иконку в зависимости от типа
             let markerIcon;
-            if (icon === icons.regular) {
-                markerIcon = icons.regular(currentZoom);
-            } else if (icon === icons.regularBacklight) {
-                markerIcon = icons.regularBacklight(currentZoom);
+            if (typeof icon === 'function') {
+                // Если иконка - функция (например, icons.regular), вызываем ее с текущим zoom
+                markerIcon = icon(currentZoom);
             } else {
+                // Если иконка - объект (старый вариант), используем как есть
                 markerIcon = icon;
             }
 
@@ -478,14 +513,14 @@
                 if (icon === icons.regular) {
                     marker.setIcon(icons.regularBacklight(newZoom));
                 } else if (icon === icons.significant) {
-                    marker.setIcon(icons.significantBacklight);
+                    marker.setIcon(icons.significantBacklight(newZoom));  // Теперь с zoom
                 }
             });
 
             marker.on('popupclose', () => {
                 const newZoom = map.getZoom();
-                if (icon === icons.regular) {
-                    marker.setIcon(icons.regular(newZoom));
+                if (typeof icon === 'function') {
+                    marker.setIcon(icon(newZoom));
                 } else {
                     marker.setIcon(icon);
                 }
@@ -509,14 +544,19 @@
                            markerLatLng.lng === data.location[1];
                 });
 
-                if (markerData) {
-                    if (markerData.icon === icons.regular || markerData.icon === icons.regularBacklight) {
-                        const isPopupOpen = marker.isPopupOpen();
-                        const newIcon = isPopupOpen ?
-                            icons.regularBacklight(currentZoom) :
-                            icons.regular(currentZoom);
-                        marker.setIcon(newIcon);
+                if (markerData && typeof markerData.icon === 'function') {
+                    const isPopupOpen = marker.isPopupOpen();
+                    let newIcon;
+
+                    if (markerData.icon === icons.regular && isPopupOpen) {
+                        newIcon = icons.regularBacklight(currentZoom);
+                    } else if (markerData.icon === icons.significant && isPopupOpen) {
+                        newIcon = icons.significantBacklight(currentZoom);
+                    } else {
+                        newIcon = markerData.icon(currentZoom);
                     }
+
+                    marker.setIcon(newIcon);
                 }
             });
         });
@@ -563,12 +603,8 @@
                         return markerLatLng.lat === data.location[0] &&
                                markerLatLng.lng === data.location[1];
                     });
-                    if (markerData) {
-                        if (markerData.icon === icons.regular || markerData.icon === icons.regularBacklight) {
-                            marker.setIcon(icons.regular(currentZoom));
-                        } else {
-                            marker.setIcon(markerData.icon);
-                        }
+                    if (markerData && typeof markerData.icon === 'function') {
+                        marker.setIcon(markerData.icon(currentZoom));
                     }
                 }
             });
