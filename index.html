@@ -164,8 +164,8 @@
             number5: [130.0, 928.0],
             number6: [108.0, 942.0],
             number7: [128.0, 942.5],
-            number8: [110.0, 950.5],//
-            number9: [79.0, 933.0],//
+            number8: [110.0, 950.5],
+            number9: [79.0, 933.0],
             number10: [170.0, 888.0],
             number11: [229.0, 910.0],
             number12: [244.0, 883.0],
@@ -183,11 +183,20 @@
             number24: [223.0, 838.0],
             number25: [113.0, 711.0],
             number26: [379.0, 725.0],
+            number27: [137.0, 774.0],//
+            number28: [257.0, 914.0],//
+            number28A: [385.0, 882.0],//
+            number29: [148.0, 811.0],//
+            number30: [168.0, 798.0],
             number31: [116.0, 843.0],
+            number32: [244.6, 834.0],//
             number33: [162.0, 811.0],
-            number35: [169.0, 803.0],//
-            number36: [155.5, 793.5],//
-            number38: [130.0, 813.5],//
+            number34: [210.6, 816.0],//
+            number35: [169.0, 803.0],
+            number36: [155.5, 793.5],
+            number38: [130.0, 813.5],
+            number39: [405.4, 812.7],//
+            number40: [349.70, 768.76],//
             number68: [130.0, 685.0],
             number70: [554.0, 735.5],
             number71: [597.0, 843.0],
@@ -384,16 +393,53 @@
                 imagesAction: "showImages('Kazan Women`s Monostyr')"
             },
             {
+                location: markerLocations.number27,
+                icon: icons.regular,
+                title: "Острог"
+            },
+            {
+                location: markerLocations.number28,
+                icon: icons.regular,
+                title: "Дом коменданта г.Ярославля",
+                infoAction: "showInfo('The house of the commandant of Yaroslavl')"
+            },
+            {
+                location: markerLocations.number28A,
+                icon: icons.regular,
+                title: "Воеводский двор"
+            },
+            {
+                location: markerLocations.number29,
+                icon: icons.regular,
+                title: "Воеводская канцелярия с училещем для дворянских детей"
+            },
+            {
+                location: markerLocations.number30,
+                icon: icons.regular,
+                title: "Провинциальная канцелярия",
+                infoAction: "showInfo('Provincial Office')"
+            },
+            {
                 location: markerLocations.number31,
                 icon: icons.regular,
                 title: "Городовой магистрат",
                 infoAction: "showInfo('City Magistrate')"
             },
             {
+                location: markerLocations.number32,
+                icon: icons.regular,
+                title: "Дом общего гражданства"
+            },
+            {
                 location: markerLocations.number33,
                 icon: icons.regular,
                 title: "Землемерная чертежная",
                 infoAction: "showInfo('Land survey drawing office')"
+            },
+            {
+                location: markerLocations.number34,
+                icon: icons.regular,
+                title: "Ярославская народная школа"
             },
             {
                 location: markerLocations.number35,
@@ -410,6 +456,16 @@
                 location: markerLocations.number38,
                 icon: icons.regular,
                 title: "'Красная' богадельня с городовой школой (бывшю кладовой анбар и двор купца Барсова)",
+            },
+            {
+                location: markerLocations.number39,
+                icon: icons.regular,
+                title: "Варваринская богадельня"
+            },
+            {
+                location: markerLocations.number40,
+                icon: icons.regular,
+                title: "Аптекарский дом"
             },
             {
                 location: markerLocations.number68,
@@ -643,18 +699,19 @@
     </script>
 
     <script>
-        // Переменная для отслеживания состояния комбинации клавиш
+        // Переменные для отслеживания состояния
         let isCtrlKeyPressed = false;
         let isBackquotePressed = false;
+        let lastMouseCoords = null;
 
-        // Обработчики нажатия клавиш
+        // Обработчики клавиш
         document.addEventListener('keydown', function(e) {
             if (e.ctrlKey) isCtrlKeyPressed = true;
             if (e.key === 'ё' || e.key === '`' || e.code === 'Backquote') isBackquotePressed = true;
 
-            // Визуальный индикатор режима
             if (isCtrlKeyPressed && isBackquotePressed) {
                 document.body.classList.add('coords-mode');
+                updateCoordsPopup();
             }
         });
 
@@ -662,20 +719,25 @@
             if (e.key === 'Control') isCtrlKeyPressed = false;
             if (e.key === 'ё' || e.key === '`' || e.code === 'Backquote') isBackquotePressed = false;
 
-            // Удаляем индикатор и попап с координатами
-            document.body.classList.remove('coords-mode');
-            if (map._coordsPopup) {
-                map.removeLayer(map._coordsPopup);
-                map._coordsPopup = null;
+            if (!isCtrlKeyPressed || !isBackquotePressed) {
+                document.body.classList.remove('coords-mode');
+                if (map._coordsPopup) {
+                    map.removeLayer(map._coordsPopup);
+                    map._coordsPopup = null;
+                }
             }
         });
 
-        // Обработчик движения мыши по карте
-        map.on('mousemove', function(e) {
-            if (isCtrlKeyPressed && isBackquotePressed) {
-                const mouseCoords = e.latlng;
-                const x = mouseCoords.lng.toFixed(2);
-                const y = mouseCoords.lat.toFixed(2);
+        // Функция обновления координат
+        function updateCoordsPopup() {
+            if (isCtrlKeyPressed && isBackquotePressed && lastMouseCoords) {
+                const x = lastMouseCoords.lng.toFixed(2);
+                const y = lastMouseCoords.lat.toFixed(2);
+                const coordsText = y + ', ' + x;
+
+                navigator.clipboard.writeText(coordsText).catch(err => {
+                    console.error('Ошибка копирования:', err);
+                });
 
                 if (!map._coordsPopup) {
                     map._coordsPopup = L.popup({
@@ -684,25 +746,31 @@
                         closeOnClick: false,
                         className: 'coords-popup'
                     })
-                    .setLatLng(e.latlng)
-                    .setContent(`X: ${x}, Y: ${y}`)
+                    .setLatLng(lastMouseCoords)
+                    .setContent('X: ' + x + ', Y: ' + y + '<br>Скопировано: ' + coordsText)
                     .openOn(map);
                 } else {
                     map._coordsPopup
-                        .setLatLng(e.latlng)
-                        .setContent(`X: ${x}, Y: ${y}`);
+                        .setLatLng(lastMouseCoords)
+                        .setContent('X: ' + x + ', Y: ' + y + '<br>Скопировано: ' + coordsText);
                 }
             }
+        }
+
+        // Отслеживание движения мыши
+        map.on('mousemove', function(e) {
+            lastMouseCoords = e.latlng;
+            updateCoordsPopup();
         });
 
-        // Стили для отображения
+        // Стили с исправленной строкой content
         const style = document.createElement('style');
         style.textContent = `
             .coords-mode {
                 cursor: crosshair !important;
             }
             .coords-mode::after {
-                content: "Режим просмотра координат (Ctrl + Ё)";
+                content: "Режим координат (Ctrl + \\00B4)";
                 position: fixed;
                 bottom: 10px;
                 right: 10px;
