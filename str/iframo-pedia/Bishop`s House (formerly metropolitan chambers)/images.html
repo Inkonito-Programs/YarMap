@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru" dir="ltr">
   <head>
-    <meta charset="utf-8">
     <script src="../../../js/iframo-pedia/gallery.js"></script> <!--JS галереи-->
     <link rel="stylesheet" href="../../../css/iframo-pedia/gallery.css"> <!--CSS галереи-->
     <link href="../../../css/iframo-pedia/scrol_bar.css" rel="stylesheet" type="text/css" media="screen" > <!--Скрол бар-->
@@ -10,31 +9,34 @@
 
     <h1>Нажми на картинку</h1>
 
-    <div class="gallery">
-        <img src="../../../files/iframo-pedia/Bishop`s House (formerly metropolitan chambers)/1.jpg" alt="Image 1">
-        <img src="../../../files/iframo-pedia/Bishop`s House (formerly metropolitan chambers)/2.jpg" alt="Image 2">
-        <img src="../../../files/iframo-pedia/Bishop`s House (formerly metropolitan chambers)/3.jpg" alt="Image 3">
-        <img src="../../../files/iframo-pedia/Bishop`s House (formerly metropolitan chambers)/4.jpg" alt="Image 4">
+    <div class="gallery-container">
+      <div class="gallery">
+          <div class="gallery-item">
+              <img src="files/1.jpg">
+          </div>
+          <div class="gallery-item">
+              <img src="files/2.jpg">
+          </div>
+          <div class="gallery-item">
+              <img src="files/3.jpg">
+          </div>
+          <div class="gallery-item">
+              <img src="files/4.jpg">
+          </div>
+      </div>
     </div>
 
     <!-- Lightbox контейнер -->
     <div id="lightbox">
-        <!-- Кнопка закрыть -->
         <span id="close-btn">&times;</span>
-
-        <!-- Main lightbox картинка -->
-        <img id="lightbox-img" src="" alt="lightbox image">
-
-        <!-- Кнопки prev и next -->
-        <div class="div_with_prev_and_next_btn">
-          <button id="prev-btn">&lt; Prev</button>
-          <button id="next-btn">Next &gt;</button>
+        <div id="lightbox-content">
+            <img id="lightbox-img" src="" alt="lightbox image">
+            <div class="lightbox-nav">
+                <button id="prev-btn">&lt; Prev</button>
+                <button id="next-btn">Next &gt;</button>
+            </div>
         </div>
-
-        <!-- Thumbnails контейнер -->
-        <div id="thumbnail-container">
-            <!-- Thumbnails будет добавляться динамически с помощью JavaScript -->
-        </div>
+        <div id="thumbnail-container"></div>
     </div>
   </body>
 </html>

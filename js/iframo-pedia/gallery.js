@@ -1,85 +1,74 @@
-document.addEventListener('DOMContentLoaded', function () {
-    let currentIndex = 0;
-    const images = document.querySelectorAll('.gallery img');
-    const totalImages = images.length;
+document.addEventListener('DOMContentLoaded', function() {
+    // Делаем переменные уникальными для каждой галереи
+    const galleries = document.querySelectorAll('.gallery-container');
 
-    // Open the lightbox
-    function openLightbox(event) {
-        if (event.target.tagName === 'IMG') {
-            const clickedIndex = Array.from(images).indexOf(event.target);
-            currentIndex = clickedIndex;
+    galleries.forEach(galleryContainer => {
+        const gallery = galleryContainer.querySelector('.gallery');
+        const images = gallery.querySelectorAll('img');
+        let currentIndex = 0;
+
+        // Создаем уникальный лайтбокс для каждой галереи
+        const lightbox = document.createElement('div');
+        lightbox.id = 'lightbox';
+        lightbox.innerHTML = `
+            <span id="close-btn">&times;</span>
+            <div id="lightbox-content">
+                <img id="lightbox-img" src="" alt="lightbox image">
+                <div class="lightbox-nav">
+                    <button id="prev-btn">&lt; Prev</button>
+                    <button id="next-btn">Next &gt;</button>
+                </div>
+            </div>
+            <div id="thumbnail-container"></div>
+        `;
+        document.body.appendChild(lightbox);
+
+        function openLightbox(event) {
+            if (event.target.tagName === 'IMG') {
+                currentIndex = Array.from(images).indexOf(event.target);
+                updateLightboxImage();
+                lightbox.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function updateLightboxImage() {
+            const lightboxImg = lightbox.querySelector('#lightbox-img');
+            if (images[currentIndex]) {
+                lightboxImg.src = images[currentIndex].src;
+            }
+        }
+
+        gallery.addEventListener('click', openLightbox);
+
+        lightbox.querySelector('#close-btn').addEventListener('click', () => {
+            lightbox.style.display = 'none';
+            document.body.style.overflow = '';
+        });
+
+        lightbox.querySelector('#prev-btn').addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
             updateLightboxImage();
-            document.getElementById('lightbox').style.display = 'flex';
-        }
-    }
+        });
 
-    // Close the lightbox
-    function closeLightbox() {
-        document.getElementById('lightbox').style.display = 'none';
-    }
+        lightbox.querySelector('#next-btn').addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % images.length;
+            updateLightboxImage();
+        });
 
-    // Change the lightbox image based on direction (1 for next, -1 for prev)
-    function changeImage(direction) {
-        currentIndex += direction;
-        if (currentIndex >= totalImages) {
-            currentIndex = 0;
-        } else if (currentIndex < 0) {
-            currentIndex = totalImages - 1;
-        }
-        updateLightboxImage();
-    }
-
-    // Update the lightbox image and thumbnails
-    function updateLightboxImage() {
-        const lightboxImg = document.getElementById('lightbox-img');
-        const thumbnailContainer = document.getElementById('thumbnail-container');
-
-        // Проверка, что images[currentIndex] существует
-        if (images[currentIndex]) {
-            // Update the main lightbox image
-            lightboxImg.src = images[currentIndex].src;
-
-            // Clear existing thumbnails
-            thumbnailContainer.innerHTML = '';
-
-            // Add new thumbnails
-            images.forEach((image, index) => {
-                const thumbnail = document.createElement('img');
-                thumbnail.src = image.src;
-                thumbnail.alt = `Thumbnail ${index + 1}`;
-                thumbnail.classList.add('thumbnail');
-                thumbnail.addEventListener('click', () => updateMainImage(index));
-                thumbnailContainer.appendChild(thumbnail);
-            });
-
-            // Highlight the current thumbnail
-            const thumbnails = document.querySelectorAll('.thumbnail');
-            if (thumbnails[currentIndex]) {
-                thumbnails[currentIndex].classList.add('active-thumbnail');
+        document.addEventListener('keydown', function(e) {
+            if (lightbox.style.display === 'flex') {
+                if (e.key === 'ArrowLeft') {
+                    currentIndex = (currentIndex - 1 + images.length) % images.length;
+                    updateLightboxImage();
+                } else if (e.key === 'ArrowRight') {
+                    currentIndex = (currentIndex + 1) % images.length;
+                    updateLightboxImage();
+                } else if (e.key === 'Escape') {
+                    lightbox.style.display = 'none';
+                    document.body.style.overflow = '';
+                }
             }
-        }
-    }
-
-    // Update the main lightbox image when a thumbnail is clicked
-    function updateMainImage(index) {
-        currentIndex = index;
-        updateLightboxImage();
-    }
-
-    // To add keyboard navigation (left/right arrow keys)
-    document.addEventListener('keydown', function (e) {
-        if (document.getElementById('lightbox').style.display === 'flex') {
-            if (e.key === 'ArrowLeft') {
-                changeImage(-1);
-            } else if (e.key === 'ArrowRight') {
-                changeImage(1);
-            }
-        }
+        });
     });
-
-    // Добавляем обработчики событий
-    document.querySelector('.gallery').addEventListener('click', openLightbox);
-    document.getElementById('close-btn').addEventListener('click', closeLightbox);
-    document.getElementById('prev-btn').addEventListener('click', () => changeImage(-1));
-    document.getElementById('next-btn').addEventListener('click', () => changeImage(1));
 });

@@ -183,20 +183,26 @@
             number24: [223.0, 838.0],
             number25: [113.0, 711.0],
             number26: [379.0, 725.0],
-            number27: [137.0, 774.0],//
-            number28: [257.0, 914.0],//
-            number28A: [385.0, 882.0],//
-            number29: [148.0, 811.0],//
+            number27: [137.0, 774.0],
+            number28: [257.0, 914.0],
+            number28A: [385.0, 882.0],
+            number29: [148.0, 811.0],
             number30: [168.0, 798.0],
             number31: [116.0, 843.0],
-            number32: [244.6, 834.0],//
+            number32: [244.6, 834.0],
             number33: [162.0, 811.0],
-            number34: [210.6, 816.0],//
+            number34: [210.6, 816.0],
             number35: [169.0, 803.0],
             number36: [155.5, 793.5],
+            number37: [216.88, 879.03],//
             number38: [130.0, 813.5],
-            number39: [405.4, 812.7],//
-            number40: [349.70, 768.76],//
+            number39: [405.4, 812.7],
+            number39A: [244.10, 727.89],//
+            number40: [349.70, 768.76],
+            number41: [194.33, 856.82],//
+            number42: [191.64, 888.88],//
+            number43: [142.52, 784.51],//
+            number44: [73.30, 840.02],//
             number68: [130.0, 685.0],
             number70: [554.0, 735.5],
             number71: [597.0, 843.0],
@@ -453,6 +459,11 @@
                 title: "Кухня дворянской гимназии",
             },
             {
+                location: markerLocations.number37,
+                icon: icons.regular,
+                title: "Питейный дом и богадельня Питеева",
+            },
+            {
                 location: markerLocations.number38,
                 icon: icons.regular,
                 title: "'Красная' богадельня с городовой школой (бывшю кладовой анбар и двор купца Барсова)",
@@ -463,9 +474,36 @@
                 title: "Варваринская богадельня"
             },
             {
+                location: markerLocations.number39A,
+                icon: icons.regular,
+                title: "Сретенская богадельня"
+            },
+            {
                 location: markerLocations.number40,
                 icon: icons.regular,
                 title: "Аптекарский дом"
+            },
+            {
+                location: markerLocations.number41,
+                icon: icons.regular,
+                title: "Купеческие лавки"
+            },
+            {
+                location: markerLocations.number42,
+                icon: icons.regular,
+                title: "Кладовые анбары купца Барсова"
+            },
+            {
+                location: markerLocations.number43,
+                icon: icons.regular,
+                title: "Кладовые анбары Демидова"
+            },
+            {
+                location: markerLocations.number44,
+                icon: icons.regular,
+                title: "Анбар с землею Саввы Яковлева",
+                infoAction: "showInfo('Anbar with the land of Savva Yakovlev')",
+                imagesAction: "showImages('Anbar with the land of Savva Yakovlev')"
             },
             {
                 location: markerLocations.number68,
@@ -617,7 +655,6 @@
             });
         });
 
-        // Обработчик кликов по ссылкам в iframe
         function handleIframeLinkClick(event) {
             event.preventDefault();
             const clickedTitle = event.target.textContent.trim().replace(/^\d+\.\s*/, '');
@@ -633,11 +670,14 @@
                 if (correspondingMarker) {
                     const currentZoom = map.getZoom();
                     let newIcon;
+
+                    // Исправленная логика установки иконки
                     if (correspondingMarkerData.icon === icons.regular) {
                         newIcon = icons.regularBacklight(currentZoom);
                     } else if (correspondingMarkerData.icon === icons.significant) {
-                        newIcon = icons.significantBacklight;
+                        newIcon = icons.significantBacklight(currentZoom); // Добавлен currentZoom
                     } else {
+                        // Если icon не является функцией, используем его как есть
                         newIcon = correspondingMarkerData.icon;
                     }
 
